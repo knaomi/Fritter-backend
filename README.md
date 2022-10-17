@@ -313,3 +313,277 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+
+<!-- DownFreet -->
+#### `GET /api/downfreets?author=USERNAME` - Get downfreets by author
+
+**Returns**
+
+- An array of downfreets created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/downfreets` - Create a new freet
+
+**Body**
+
+- `freetid` _{string}_ - The freetid being downfreeted
+
+**Returns**
+
+- A success message
+- A object with the created downfreet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the downfreet was not created by the author
+
+
+#### `DELETE /api/downfreets/:downfreetId?` - Delete an existing downfreet
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the downfreet
+- `404` if the downfreetId is invalid
+
+<!-- Like -->
+#### `GET /api/likes?author=USERNAME` - Get downfreets by author
+
+**Returns**
+
+- An array of likes created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/likes` - Create a new like
+
+**Body**
+
+- `freetid` _{string}_ - The freetid being liked
+
+**Returns**
+
+- A success message
+- A object with the created like
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the like was not created by the author
+
+
+#### `DELETE /api/likes/:likeId?` - Delete an existing like
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the like
+- `404` if the likeId is invalid
+
+
+
+
+<!-- Refreet -->
+
+#### `GET /api/refreets?author=USERNAME` - Get refreets by author
+
+**Returns**
+
+- An array of refreets created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/refreets/:freetid` - Create a new refreet
+
+
+**Returns**
+
+- A success message
+- A object with the created refreet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the refreet was not created by the author
+- `404` if the freetId is invalid
+
+
+
+#### `DELETE /api/likes/:likeId?` - Delete an existing like
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the like
+- `404` if the likeId is invalid
+
+
+
+
+<!-- freetdrafts -->
+
+#### `GET /api/freetdrafts?author=USERNAME` - Get freetdrafts by author
+
+**Returns**
+
+- An array of freetdrafts created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+
+#### `POST /api/freetdrafts` - Create a new freet-draft
+
+**Body**
+
+- `content` _{string}_ - The content of the freet-draft
+
+**Returns**
+
+- A success message
+- A object with the created freetdraft
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the freetdraft content is empty or a stream of empty spaces
+- `413` If the freetdraft content is more than 140 characters long
+
+#### `DELETE /api/freetdrafts/:freetdraftId?` - Delete an existing freetdraft
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the freetdraft
+- `404` if the freetdraftId is invalid
+
+#### `PUT /api/freetdrafts/:freetdraftId?` - Update an existing freetdraft
+
+**Body**
+
+- `content` _{string}_ - The new content of the freetdraft
+
+**Returns**
+
+- A success message
+- An object with the updated freetdraft
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetdraftId is invalid
+- `403` if the user is not the author of the freetdraft
+- `400` if the new freetdraft content is empty or a stream of empty spaces
+- `413` if the new freetdraft content is more than 140 characters long
+
+
+<!-- Translate -->
+#### `POST /api/freets/translations/:freetid` - Create an new user account
+
+**Body**
+
+- `freetid` _{string}_ - The freet being translated
+
+**Returns**
+
+- A success message
+- An object with the created freet's translation
+
+**Throws**
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+
+<!-- Bookmark nests -->
+
+#### `GET /api/bookmarks?author=USERNAME` - Get freets by author
+
+**Returns**
+
+- An array of bookmarks created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/bookmarks/:freetId` - Create a new bookmark on freetId
+
+**Returns**
+
+- A success message
+- A object with the created bookmark
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+
+
+#### `POST /api/bookmarks/nests` - Create a new bookmark nest
+
+**Returns**
+
+- A success message
+- A object with the created bookmark nest
+
+**Throws**
+
+- `403` if the user is not logged in
+
+
+#### `DELETE /api/bookmarks/:bookmarkId?` - Delete an existing bookmark on a Freet
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the bookmark
+- `404` if the bookmarkId is invalid
+
+
+#### `DELETE /api/bookmarks/:bookmarknestId?` - Delete an existing bookmarknest
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the nest
+- `404` if the bookmarknestId is invalid
+
+
