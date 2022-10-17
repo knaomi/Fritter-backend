@@ -1,6 +1,7 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
 import DownFreetCollection from './collection';
+import FreetCollection from '../freet/collection';
 
 /**
  * Checks if a downfreet with downfreetId is req.params exists
@@ -22,47 +23,41 @@ const isDownFreetExists = async (req: Request, res: Response, next: NextFunction
   
 };
 
-
+/**
+ * Check if the user already downfreeted the freet.
+ */
 const isUserAlreadyDownFreeting = async (req: Request, res: Response, next: NextFunction) => {
-    // const downfreet = await DownFreetCollection.findOne(req.params.downfreetId);
-    // const userId = downfreet.authorId._id;
-    const authorDownFreets = await DownFreetCollection.findAllByUsername(req.query.author as string);
-
-   for (const downfreet of authorDownFreets){
-        if (downfreet.originalFreet._id === req.body.freetId){
-            res.status(400).json({
-              error: 'user is not allowed to downfreet a Freet more than once'
-           })
-        };
+    const freet = await FreetCollection.findOne(req.body.freetid);
+    const downfreetsOnFreet = await DownFreetCollection.findAllbyFreetId(freet._id);
+    for (const downfreet of downfreetsOnFreet){
+      if (downfreet.authorId._id.toString() === req.session.userId){
+        res.status(400).json({
+          error: 'user is not allowed to downfreet a Freet more than once'
+      })
         return;
-   }
+      };
+    };
     next();
-  };
+}
   
  
 
-// /**
-//  * Checks if the content of the freet in req.body is valid, i.e not a stream of empty
-//  * spaces and not more than 140 characters
-//  */
-// const isValidFreetContent = (req: Request, res: Response, next: NextFunction) => {
-//   const {content} = req.body as {content: string};
-//   if (!content.trim()) {
-//     res.status(400).json({
-//       error: 'Freet content must be at least one character long.'
-//     });
-//     return;
-//   }
-
-//   if (content.length > 140) {
-//     res.status(413).json({
-//       error: 'Freet content must be no more than 140 characters.'
-//     });
-//     return;
-//   }
-
-//   next();
-// };
+/**
+ * Checks if the freetid in req.body is valid.
+ */
+const isValidFreetId = async (req: Request, res: Response, next: NextFunction) => {
+  const validFormat = Types.ObjectId.isValid(req.body.freetid);
+  const freet = validFormat ? await FreetCollection.findOne(req.body.freetid) : '';
+  if (!freet) {
+    res.status(404).json({
+      error: {
+        freetNotFound: `Freet with freet ID ${req.body.freetid} does not exist.`
+      }
+    });
+    return;
+  };
+  next();
+};
 
 /**
  * Checks if the current user is the author of the downfreet whose freetId is in req.params
@@ -81,8 +76,8 @@ const isValidDownFreetModifier = async (req: Request, res: Response, next: NextF
 };
 
 export {
-//   isValidFreetContent,
+  isValidFreetId,
   isDownFreetExists,
   isValidDownFreetModifier,
-//   isUserAlreadyDownFreeting,
+  isUserAlreadyDownFreeting,
 };

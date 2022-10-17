@@ -54,24 +54,21 @@ router.get(
  *
  * @name POST /api/downfreets
  *
- * @param {string} freetId - The freet that the user is downFreeting
+ * @param {string} freetid - The freet that the user is downFreeting
  * @return {DownFreetResponse} - The created downfreet
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the user had already added a downFreet on the Freet
-//  * @throws {400} - If the freet content is empty or a stream of empty spaces
-//  * @throws {413} - If the freet content is more than 140 characters long
+ * @throws{404} - If the freetid does not exist.
  */
 router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    // freetValidator.isFreetExists,
-    // downfreetValidator.isUserAlreadyDownFreeting,
+    downfreetValidator.isValidFreetId,
+    downfreetValidator.isUserAlreadyDownFreeting,
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    // DO CHECKING OF FREET HERE
-    
     const downfreet = await DownFreetCollection.addOne(userId, req.body.freetid);
 
     res.status(201).json({
@@ -106,34 +103,5 @@ router.delete(
   }
 );
 
-// /** // NOT RELEVANT SINCE A DOWNFREET CANNOT BE MODIFIED
-//  * Modify a freet
-//  *
-//  * @name PUT /api/freets/:id
-//  *
-//  * @param {string} content - the new content for the freet
-//  * @return {FreetResponse} - the updated freet
-//  * @throws {403} - if the user is not logged in or not the author of
-//  *                 of the freet
-//  * @throws {404} - If the freetId is not valid
-//  * @throws {400} - If the freet content is empty or a stream of empty spaces
-//  * @throws {413} - If the freet content is more than 140 characters long
-//  */
-// router.put(
-//   '/:freetId?',
-//   [
-//     userValidator.isUserLoggedIn,
-//     freetValidator.isFreetExists,
-//     freetValidator.isValidFreetModifier,
-//     freetValidator.isValidFreetContent
-//   ],
-//   async (req: Request, res: Response) => {
-//     const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
-//     res.status(200).json({
-//       message: 'Your freet was updated successfully.',
-//       freet: util.constructFreetResponse(freet)
-//     });
-//   }
-// );
 
 export {router as downfreetRouter};
