@@ -17,10 +17,7 @@ const isDownFreetExists = async (req: Request, res: Response, next: NextFunction
     });
     return;
   }
-
   next();
-
-  
 };
 
 /**
@@ -39,8 +36,7 @@ const isUserAlreadyDownFreeting = async (req: Request, res: Response, next: Next
     };
     next();
 }
-  
- 
+
 
 /**
  * Checks if the freetid in req.body is valid.
