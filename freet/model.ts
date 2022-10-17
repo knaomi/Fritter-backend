@@ -14,6 +14,9 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  // downfreetingUsers?: Array<Types.ObjectId>;
+  // downfreetsNumber? : Number;
+
 };
 
 export type PopulatedFreet = {
@@ -22,6 +25,9 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  // downfreetingUsers?: Array<Types.ObjectId>;
+  // downfreetsNumber? : Number;
+
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -51,6 +57,28 @@ const FreetSchema = new Schema<Freet>({
     required: true
   }
 });
+
+// // (virtual-population)
+// // Auto-populate a DownFreet.downfreeting_users field with any downFreets are associated with the originalFreet
+// // such that a Freet.id = DownFreet.originalFreet._id
+// FreetSchema.virtual('downfreetingUsers',{
+//     ref: 'DownFreet',
+//     localField: '_id',
+//     foreignField: 'originalFreet'
+
+// })
+
+
+// FreetSchema.virtual('downfreetsNumber')
+//     .get(function () {
+//             return this.downfreetingUsers;
+//     })
+//     .set(function (usersDownfreeting: Array<Types.ObjectId>){
+//         this.downfreetsNumber =usersDownfreeting.length
+//     })
+
+// // move the above two to Freet if it does not work
+
 
 const FreetModel = model<Freet>('Freet', FreetSchema);
 export default FreetModel;
