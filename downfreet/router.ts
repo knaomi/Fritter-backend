@@ -16,8 +16,6 @@ const router = express.Router();
  * @return {DownFreetResponse[]} - A list of all the downfreets sorted in descending
  *                      order by date added
  */
-
-
 /**
  * Get downfreets by author.
  *
@@ -54,10 +52,9 @@ router.get(
 /**
  * Create a new downfreet.
  *
- * @name POST /api/downfreets/:id
+ * @name POST /api/downfreets
  *
-//  * @param {string} content - The content of the downfreet
-* @param {string}originalFreet - The freet that the user is downFreeting
+ * @param {string} freetId - The freet that the user is downFreeting
  * @return {DownFreetResponse} - The created downfreet
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the user had already added a downFreet on the Freet
@@ -68,13 +65,14 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExists,
+    // freetValidator.isFreetExists,
     // downfreetValidator.isUserAlreadyDownFreeting,
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    // const downfreet = await DownFreetCollection.addOne(userId, req.body.originalfreetId);
-    const downfreet = await DownFreetCollection.addOne(userId, req.params.freetId);
+    // DO CHECKING OF FREET HERE
+    
+    const downfreet = await DownFreetCollection.addOne(userId, req.body.freetid);
 
     res.status(201).json({
       message: 'Your downfreet was created successfully.',
@@ -94,7 +92,7 @@ router.post(
  * @throws {404} - If the downfreetId is not valid
  */
 router.delete(
-  '/:freetId?',
+  '/:downfreetId?',
   [
     userValidator.isUserLoggedIn,
     downfreetValidator.isDownFreetExists,

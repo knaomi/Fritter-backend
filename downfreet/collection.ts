@@ -2,6 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {DownFreet} from './model';
 import DownFreetModel from './model';
 import UserCollection from '../user/collection';
+import FreetCollection from '../freet/collection';
 
 /**
  * This files contains a class that has the functionality to explore downfreets
@@ -10,7 +11,7 @@ import UserCollection from '../user/collection';
  */
 class DownFreetCollection {
   /**
-   * Add a freet to the collection
+   * Add a downfreet to the collection
    *
    * @param {string} authorId - The id of the author of the downfreet
    * @param {string} originalFreet - The id of the originalFreet
@@ -21,7 +22,7 @@ class DownFreetCollection {
     const downfreet = new DownFreetModel({
       authorId,
       originalFreet,
-      dateCreated: Date
+      dateCreated: date
     });
     await downfreet.save(); // Saves downfreet to MongoDB
     return downfreet.populate('authorId');
@@ -43,19 +44,30 @@ class DownFreetCollection {
    * @return {Promise<HydratedDocument<DownFreet>[]>} - An array of all of the downfreets
    */
   static async findAll(): Promise<Array<HydratedDocument<DownFreet>>> {
-    // Retrieves freets and sorts them from most to least recent
-    return DownFreetModel.find({}).sort({dateModified: -1}).populate('authorId');
+    // Retrieves downfreets and sorts them from most to least recent
+    return DownFreetModel.find({}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
    * Get all the downfreets in by given author
    *
-   * @param {string} username - The username of author of the freets
+   * @param {string} username - The username of author of the downfreets
    * @return {Promise<HydratedDocument<DownFreet>[]>} - An array of all of the downfreets
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<DownFreet>>> {
     const author = await UserCollection.findOneByUsername(username);
     return DownFreetModel.find({authorId: author._id}).populate('authorId');
+  }
+
+  /**
+   * Get all the DownFreets on a Freet
+   * 
+   * @param {string} freetId - The Id of the Freet
+   * @returns Promise<Array<HydratedDocument<DownFreet>>> - An array of all the DownFreets
+   */
+  static async findAllbyFreetId(freetId: Types.ObjectId | string): Promise<Array<HydratedDocument<DownFreet>>>{
+    const freet = await FreetCollection.findOne(freetId);
+    return DownFreetModel.find({originalFreet: freet._id}).populate('_id');
   }
 
 //   /**
@@ -92,6 +104,16 @@ class DownFreetCollection {
   static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
     await DownFreetModel.deleteMany({authorId});
   }
+
+  /**
+   * Delete all the downfreets on a freet
+   * @param {string} freetId - The id of the Freet whose downFreets are being deleted
+   */
+  static async deleteManybyFreetId(freetId: Types.ObjectId | string ):Promise<void>{
+    await DownFreetModel.deleteMany({freetId})
+  }
 }
+
+
 
 export default DownFreetCollection;

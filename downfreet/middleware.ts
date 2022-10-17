@@ -29,8 +29,10 @@ const isUserAlreadyDownFreeting = async (req: Request, res: Response, next: Next
     const authorDownFreets = await DownFreetCollection.findAllByUsername(req.query.author as string);
 
    for (const downfreet of authorDownFreets){
-        if (downfreet.originalFreet._id === req.body.originalfreetId){
-            error: 'user is not allowed to downfreet a Freet more than once'
+        if (downfreet.originalFreet._id === req.body.freetId){
+            res.status(400).json({
+              error: 'user is not allowed to downfreet a Freet more than once'
+           })
         };
         return;
    }

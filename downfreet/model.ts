@@ -51,5 +51,5 @@ const DownFreetSchema = new Schema<DownFreet>({
 });
 
 
-const DownFreetModel = model<DownFreet>('Freet', DownFreetSchema);
+const DownFreetModel = model<DownFreet>('DownFreet', DownFreetSchema);
 export default DownFreetModel;

@@ -39,6 +39,7 @@ const formsAndHandlers = {
   'create-freet': createFreet,
   'edit-freet': editFreet,
   'delete-freet': deleteFreet,
+  'view-all-downfreets': viewAllDownFreets,
   'view-downfreets-by-author': viewDownFreetsByAuthor,
   'create-downfreet': createDownFreet,
   'delete-downfreet': deleteDownFreet
