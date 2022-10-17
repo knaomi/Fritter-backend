@@ -327,7 +327,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
 
-#### `POST /api/downfreets` - Create a new freet
+#### `POST /api/downfreets` - Create a new downfreet
 
 **Body**
 
@@ -357,7 +357,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `404` if the downfreetId is invalid
 
 <!-- Like -->
-#### `GET /api/likes?author=USERNAME` - Get downfreets by author
+#### `GET /api/likes?author=USERNAME` - Get likes by author
 
 **Returns**
 
