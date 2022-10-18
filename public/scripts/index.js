@@ -42,7 +42,11 @@ const formsAndHandlers = {
   'view-all-downfreets': viewAllDownFreets,
   'view-downfreets-by-author': viewDownFreetsByAuthor,
   'create-downfreet': createDownFreet,
-  'delete-downfreet': deleteDownFreet
+  'delete-downfreet': deleteDownFreet,
+  'view-all-likes': viewAllLikes,
+  'view-likes-by-author': viewLikesByAuthor,
+  'create-like': createLike,
+  'delete-like': deleteLike,
 
 };
 

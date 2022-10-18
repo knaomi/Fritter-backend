@@ -5,6 +5,7 @@
   <meta name="author" content="6.170 Staff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/scripts/like.js"></script>
   <script src="/scripts/downfreet.js"></script>
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
@@ -157,7 +158,42 @@
 
 <!-- End DownFreet -->
 
+<!-- Begin Like -->
+        <form id="view-all-likes">
+          <h3>View All Likes</h3>
+          <input type="submit" value="View All Likes">
+        </form>
 
+        <form id="view-likes-by-author">
+          <h3>View Likes By Author</h3>
+          <div>
+            <label for="author">Author:</label>
+            <input id="author" name="author">
+          </div>
+          <input type="submit" value="View Likes By Author">
+        </form>
+
+
+        <form id="create-like">
+          <h3>Create Like</h3>
+          <div>
+            <label for="freetid">FreetId:</label>
+            <textarea id="freetid" name="freetid"></textarea>
+          </div>
+          <input type="submit" value="Create Like">
+        </form>
+
+
+        <form id="delete-like">
+          <h3>Delete Like</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Like">
+        </form>
+
+<!-- End Like -->
       </div>
     </section>
     <section>
