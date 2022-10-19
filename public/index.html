@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script src="/scripts/like.js"></script>
+  <script src="/scripts/refreet.js"></script>
   <script src="/scripts/downfreet.js"></script>
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
@@ -158,6 +159,42 @@
 
 <!-- End DownFreet -->
 
+<!-- Begin ReFreet -->
+  <form id="view-all-refreets">
+    <h3>View All ReFreets</h3>
+    <input type="submit" value="View All ReFreets">
+  </form>
+
+  <form id="view-refreets-by-author">
+    <h3>View ReFreets By Author</h3>
+    <div>
+      <label for="author">Author:</label>
+      <input id="author" name="author">
+    </div>
+    <input type="submit" value="View ReFreets By Author">
+  </form>
+
+
+  <form id="create-refreet">
+    <h3>Create ReFreet</h3>
+    <div>
+      <label for="freetid">FreetId:</label>
+      <textarea id="freetid" name="freetid"></textarea>
+    </div>
+    <input type="submit" value="Create ReFreet">
+  </form>
+
+
+  <form id="delete-refreet">
+    <h3>Delete ReFreet</h3>
+    <div>
+      <label for="id">ID:</label>
+      <input id="id" name="id">
+    </div>
+    <input type="submit" value="Delete ReFreet">
+  </form>
+<!-- End ReFreet -->
+
 <!-- Begin Like -->
         <form id="view-all-likes">
           <h3>View All Likes</h3>
@@ -194,6 +231,7 @@
         </form>
 
 <!-- End Like -->
+
       </div>
     </section>
     <section>
