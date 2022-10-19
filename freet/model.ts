@@ -14,8 +14,9 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
-  // downfreetingUsers?: Array<Types.ObjectId>;
-  // downfreetsNumber? : Number;
+  // "SHOULD I INCLUDE REFREETS, DOWNFFREETS LIKES HERE  SUCH THAT"
+  // "REFREETS: ARRAY<TYPES.OBJECTID>"
+  // "THESE FILEDS WOULD BE AUTOPOPULATED TO SHOW ALL THE REACTIONS ON THE REFREET"
 
 };
 

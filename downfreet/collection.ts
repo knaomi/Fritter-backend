@@ -6,7 +6,7 @@ import FreetCollection from '../freet/collection';
 
 /**
  * This files contains a class that has the functionality to explore downfreets
- * stored in MongoDB, including adding, finding, and deleting freets.
+ * stored in MongoDB, including adding, finding, and deleting downfreets.
  *
  */
 class DownFreetCollection {
