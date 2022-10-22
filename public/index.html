@@ -8,6 +8,7 @@
   <script src="/scripts/like.js"></script>
   <script src="/scripts/refreet.js"></script>
   <script src="/scripts/downfreet.js"></script>
+  <script src="/scripts/bookmark.js"></script>
   <script src="/scripts/freetdraft.js"></script>
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
@@ -168,6 +169,41 @@
         <input type="submit" value="Delete FreetDraft">
         </form>
 
+
+<!-- For BookMark -->
+        <form id="view-all-bookmarks">
+          <h3>View All BookMarks</h3>
+          <input type="submit" value="View All BookMarks">
+        </form>
+
+        <form id="view-bookmarks-by-author">
+          <h3>View BookMarks By Author</h3>
+          <div>
+            <label for="author">Author:</label>
+            <input id="author" name="author">
+          </div>
+          <input type="submit" value="View BookMarks By Author">
+        </form>
+
+
+        <form id="create-bookmark">
+          <h3>Create BookMark</h3>
+          <div>
+            <label for="freetid">FreetId:</label>
+            <textarea id="freetid" name="freetid"></textarea>
+          </div>
+          <input type="submit" value="Create BookMark">
+        </form>
+
+
+        <form id="delete-bookmark">
+          <h3>Delete BookMark</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete BookMark">
+        </form>
 
 <!-- For DownFreet -->
         <form id="view-all-downfreets">
