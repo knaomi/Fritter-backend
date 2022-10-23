@@ -4,6 +4,10 @@ import FreetCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
+import BookMarkCollection from '../bookmark/collection';
+import LikeCollection from '../like/collection';
+import DownFreetCollection from '../downfreet/collection';
+import ReFreetCollection from '../refreet/collection';
 
 const router = express.Router();
 
@@ -94,6 +98,10 @@ router.delete(
     freetValidator.isValidFreetModifier
   ],
   async (req: Request, res: Response) => {
+    // await BookMarkCollection.deleteManybyFreetId(req.params.freetId); BOOKMARK ROUTER NEEDS FIXING
+    await DownFreetCollection.deleteManybyFreetId(req.params.freetId);
+    await LikeCollection.deleteManybyFreetId(req.params.freetId);
+    await ReFreetCollection.deleteManybyFreetId(req.params.freetId);
     await FreetCollection.deleteOne(req.params.freetId);
     res.status(200).json({
       message: 'Your freet was deleted successfully.'

@@ -4,6 +4,8 @@ import DownFreetCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as downfreetValidator from './middleware';
 import * as freetValidator from '../freet/middleware';
+import * as likeValidator from '../like/middleware';
+import LikeCollection from '../like/collection';
 import * as util from './util';
 
 const router = express.Router();
@@ -70,11 +72,20 @@ router.post(
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     const downfreet = await DownFreetCollection.addOne(userId, req.body.freetid);
-
-    res.status(201).json({
-      message: 'Your downfreet was created successfully.',
-      downfreet: util.constructDownFreetResponse(downfreet)
-    });
+    const likeOnFreet = await LikeCollection.findOneByFreetId(req.body.freetid, userId);
+    if (likeOnFreet){
+      await LikeCollection.deleteOne(likeOnFreet._id);
+      res.status(201).json({
+        message: 'Downfreet was created successfully and \n' +
+          'Your previous like was canceled successfully by downfreet',
+      });
+    }
+    else{
+      res.status(201).json({
+        message: 'Your downfreet was created successfully.',
+        downfreet: util.constructDownFreetResponse(downfreet)
+      });
+  }
   }
 );
 
