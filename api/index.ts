@@ -14,6 +14,7 @@ import {freetRouter} from '../freet/router';
 import {freetdraftRouter} from '../freetdraft/router';
 import {downfreetRouter} from '../downfreet/router';
 import {bookmarkRouter} from '../bookmark/router';
+import {bookmarknestRouter} from '../bookmarknest/router';
 import {refreetRouter} from '../refreet/router';
 import {likeRouter} from '../like/router';
 
@@ -85,6 +86,7 @@ app.use('/api/freets', freetRouter);
 app.use('/api/freetdrafts', freetdraftRouter);
 app.use('/api/downfreets', downfreetRouter);
 app.use('/api/bookmarks', bookmarkRouter);
+app.use('/api/bookmarknests', bookmarknestRouter);
 app.use('/api/refreets', refreetRouter);
 app.use('/api/likes', likeRouter);
 
