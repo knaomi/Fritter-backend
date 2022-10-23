@@ -1,6 +1,7 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import LikeCollection from './collection';
+import DownFreetCollection from '../downfreet/collection';
 import * as userValidator from '../user/middleware';
 import * as likeValidator from './middleware';
 import * as freetValidator from '../freet/middleware';
@@ -70,11 +71,21 @@ router.post(
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     const like = await LikeCollection.addOne(userId, req.body.freetid);
-    console.log("got to router")
-    res.status(201).json({
-      message: 'Your like was created successfully.',
-      like: util.constructLikeResponse(like)
-    });
+    const downFreetOnFreet = await DownFreetCollection.findOneByFreetId(req.body.freetid, userId);
+    if (downFreetOnFreet){
+      await DownFreetCollection.deleteOne(downFreetOnFreet._id);
+      res.status(201).json({
+        message: 'The previous downFreet was deleted successfully \n'+
+            'and Your like was created successfully.',
+        like: util.constructLikeResponse(like)
+      });     
+    }
+    else{
+      res.status(201).json({
+        message: 'Your like was created successfully.',
+        like: util.constructLikeResponse(like)
+      });
+    }
   }
 );
 

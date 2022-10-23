@@ -28,6 +28,7 @@ class LikeCollection {
     return like.populate('authorId');
   }
 
+
   /**
    * Find a like by likeId
    *
@@ -37,6 +38,23 @@ class LikeCollection {
   static async findOne(likeId: Types.ObjectId | string): Promise<HydratedDocument<Like>> {
     return LikeModel.findOne({_id: likeId}).populate('authorId');
   }
+
+
+/**
+   * Find a like by freetId for a given author
+   * @param {string} freetId - The id of the originalfreet
+   * @param {string} authorId - The id of the author of the like on freet to find
+   * @return {Promise<HydratedDocument<Like>> | Promise<null> } - The like on the freet by author, if any
+  */
+ static async findOneByFreetId(freetId: string, authorId: Types.ObjectId | string): Promise<HydratedDocument<Like>> {
+  const author = await UserCollection.findOneByUserId(authorId);
+  const freet = await FreetCollection.findOne(freetId);
+  return LikeModel.findOne({originalFreet: freet, authorId: author._id}).populate('authorId');
+
+
+}
+
+
 
   /**
    * Get all the likes in the database (i.e. on all Freets by all users)

@@ -38,6 +38,23 @@ class DownFreetCollection {
     return DownFreetModel.findOne({_id: downfreetId}).populate('authorId');
   }
 
+
+/**
+   * Find a downfreet by freetId for a given author
+   * @param {string} freetId - The id of the originalfreet
+   * @param {string} authorId - The id of the author of the like on freet to find
+   * @return {Promise<HydratedDocument<Down>> | Promise<null> } - The downfreet on the freet by author, if any
+  */
+ static async findOneByFreetId(freetId: string, authorId: Types.ObjectId | string): Promise<HydratedDocument<DownFreet>> {
+  const author = await UserCollection.findOneByUserId(authorId);
+  const freet = await FreetCollection.findOne(freetId);
+  return DownFreetModel.findOne({originalFreet: freet, authorId: author._id}).populate('authorId');
+
+
+}
+
+
+
   /**
    * Get all the downfreets in the database (i.e. on all Freets by all users)
    *
