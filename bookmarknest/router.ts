@@ -38,7 +38,6 @@ router.get(
       next();
       return;
     }
-    // ADD CHECK SO THAT ALL BOOKMARKNESTS ARE ONLY THOSE OF THE USER
     const allBookMarkNests = await BookMarkNestCollection.findAll();
     const response = allBookMarkNests.map(util.constructBookMarkNestResponse);
     res.status(200).json(response);
@@ -57,7 +56,6 @@ router.get(
 
 /**
  * Create a new bookmarknest.
- *
  * @name POST /api/bookmarknests
  *
  * @param {string} nestname - The name of the BookMarkNest that the user is creating.
@@ -133,7 +131,6 @@ router.delete(
     userValidator.isUserLoggedIn,
     bookmarknestValidator.isBookMarkNestExists,
     bookmarknestValidator.isValidBookMarkNestModifier,
-    // bookmarknestValidator.isBookMarkNestTheRoot,
   ],
   async (req: Request, res: Response) => {
     await BookMarkCollection.deleteManybyBookMarkNestId(req.params.bookmarknestId);
