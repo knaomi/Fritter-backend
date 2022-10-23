@@ -2,6 +2,7 @@ import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
 import type {Freet} from '../freet/model';
+import { BookMarkNest } from '../bookmarknest/model';
 
 /**
  * This file defines the properties stored in an individual bookmark
@@ -12,6 +13,7 @@ import type {Freet} from '../freet/model';
 export type BookMark = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   authorId: Types.ObjectId;
+  nestId: Types.ObjectId; // each bookmark must belong to a specific nest
   originalFreet: Types.ObjectId;
   dateCreated: Date;
 
@@ -20,6 +22,7 @@ export type BookMark = {
 export type PopulatedBookMark = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   authorId: User;
+  nestId: BookMarkNest;
   originalFreet: Freet;
   dateCreated: Date;
 };
@@ -35,6 +38,14 @@ const BookMarkSchema = new Schema<BookMark>({
     required: true,
     ref: 'User'
   },
+
+  nestId: {
+    // Use Types.ObjectId outside of the schema
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'BookMarkNest'
+  },
+
   // The content of the BookMark -> The actual Freet it was issued on
   originalFreet: {
     // Use Types.ObjectId outside of the schema

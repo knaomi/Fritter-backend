@@ -3,6 +3,10 @@ import type {BookMark} from './model';
 import BookMarkModel from './model';
 import UserCollection from '../user/collection';
 import FreetCollection from '../freet/collection';
+import BookMarkNestCollection from '../bookmarknest/collection';
+
+// POTENTIAL CHANGES
+// Add Function Delete BookMarks by the given nest
 
 /**
  * This files contains a class that has the functionality to explore bookmarks
@@ -14,13 +18,15 @@ class BookMarkCollection {
    * Add a bookmark to the collection
    *
    * @param {string} authorId - The id of the author of the bookmark
+   * @param{string} nestId - The id of the bookmarknest you are adding the bookmark to.
    * @param {string} originalFreet - The id of the originalFreet
    * @return {Promise<HydratedDocument<BookMark>>} - The newly created bookmark
    */
-  static async addOne(authorId: Types.ObjectId | string, originalFreet: Types.ObjectId | string): Promise<HydratedDocument<BookMark>> {
+  static async addOne(authorId: Types.ObjectId | string, nestId: Types.ObjectId | string,originalFreet: Types.ObjectId | string): Promise<HydratedDocument<BookMark>> {
     const date = new Date();
     const bookmark = new BookMarkModel({
       authorId,
+      nestId,
       originalFreet,
       dateCreated: date
     });
@@ -57,6 +63,17 @@ class BookMarkCollection {
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<BookMark>>> {
     const author = await UserCollection.findOneByUsername(username);
     return BookMarkModel.find({authorId: author._id}).populate('authorId');
+  }
+
+  /**
+   * Get all the bookmarks in a bookmarknest.
+   *
+   * @param {string} nestId - The nestId of the bookmarknest
+   * @return {Promise<HydratedDocument<BookMark>[]>} - An array of all of the bookmarks
+   */
+   static async findAllByNestId(nestId:Types.ObjectId | string): Promise<Array<HydratedDocument<BookMark>>> {
+    const nest = await BookMarkNestCollection.findOne(nestId);
+    return BookMarkModel.find({nestId: nest._id}).populate('nestId');
   }
 
   /**
@@ -97,7 +114,18 @@ class BookMarkCollection {
   static async deleteManybyFreetId(freetId: Types.ObjectId | string ):Promise<void>{
     await BookMarkModel.deleteMany({freetId})
   }
+  /**
+    * Delete all the Bookmarks in a BookNest
+    * @param {string} bookmarknestId - the id of the Nest whose bookMarks are being deleted 
+    */
+   static async deleteManybyBookMarkNestId(bookmarknestId: Types.ObjectId | string ):Promise<void>{
+    await BookMarkModel.deleteMany({bookmarknestId})
+  }  
+
 }
+
+
+
 
 
 

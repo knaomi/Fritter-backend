@@ -1,6 +1,7 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import BookMarkNestCollection from './collection';
+import BookMarkCollection from '../bookmark/collection';
 import * as userValidator from '../user/middleware';
 import * as bookmarknestValidator from './middleware';
 import * as freetValidator from '../freet/middleware';
@@ -99,6 +100,10 @@ router.delete(
     bookmarknestValidator.isBookMarkNestTheRoot,
   ],
   async (req: Request, res: Response) => {
+    // CHANGE THIS LATER ON SO THAT
+    // IF BOOKMARKNESTDEFAULT: ONLY DELETE THE BOOKMARKS, KEEP THE ROOT
+    // IF NOT DEFAULT: DO WHAT IS BEING DONE BELOW 
+    await BookMarkCollection.deleteManybyBookMarkNestId(req.params.bookmarknestId);
     await BookMarkNestCollection.deleteOne(req.params.bookmarknestId);
     res.status(200).json({
       message: 'Your bookmarknest was deleted successfully.'

@@ -19,10 +19,18 @@
   }
   
   function createBookMark(fields) {
+    // console.log("got to bookmark.js", fields.id)
     fetch(`/api/bookmarks`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
       .then(showResponse)
       .catch(showResponse);
   }
+
+  // function createBookMarkNewNest(fields) {
+  //   // console.log("got to bookmark.js", fields.id)
+  //   fetch(`/api/bookmarks`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
   
   
   function deleteBookMark(fields) {

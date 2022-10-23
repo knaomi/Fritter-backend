@@ -187,14 +187,41 @@
         </form>
 
 
-        <form id="create-bookmark">
-          <h3>Create BookMark</h3>
+        <form id="create-bookmark-in-existing-nest">
+          <h3>Create BookMark in Existing Nest</h3>
+          <div>
+            <label for="bookmarknestid">NestID:</label>
+            <input id="bookmarknestid" name="bookmarknestid">
+          </div>
           <div>
             <label for="freetid">FreetId:</label>
             <textarea id="freetid" name="freetid"></textarea>
           </div>
           <input type="submit" value="Create BookMark">
         </form>
+
+        <form id="create-bookmark-in-new-nest">
+          <h3>Create BookMark in New Nest</h3>
+          <div>
+            <label for="nestname">NestName:</label>
+            <input id="nestname" name="nestname">
+          </div>
+          <div>
+            <label for="freetid">FreetId:</label>
+            <textarea id="freetid" name="freetid"></textarea>
+          </div>
+          <input type="submit" value="Create BookMark">
+        </form>
+
+
+        <!-- <form id="create-bookmark">
+          <h3>Create BookMark</h3>
+          <div>
+            <label for="freetid">FreetId:</label>
+            <textarea id="freetid" name="freetid"></textarea>
+          </div>
+          <input type="submit" value="Create BookMark">
+        </form> -->
 
 
         <form id="delete-bookmark">
