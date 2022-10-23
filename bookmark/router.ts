@@ -137,6 +137,7 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     await BookMarkCollection.deleteOne(req.params.bookmarkId);
+    await BookMarkCollection.deleteManybyExpiration();
     res.status(200).json({
       message: 'Your bookmark was deleted successfully.'
     });

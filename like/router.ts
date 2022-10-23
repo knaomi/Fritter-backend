@@ -108,6 +108,7 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     await LikeCollection.deleteOne(req.params.likeId);
+    await LikeCollection.deleteManybyExpiration();
     res.status(200).json({
       message: 'Your like was deleted successfully.'
     });

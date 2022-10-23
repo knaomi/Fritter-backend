@@ -25,8 +25,6 @@ class ReFreetCollection {
       dateCreated: date
     });
     await refreet.save(); // Saves downfreet to MongoDB
-    "QUESTION: SINCE THE ORIGINAL FREET IN POPULATED REFREET IS AN ACTUAL FREET"
-    "DO I NEED TO POPLULATE THE ORIGINAFREET FIELD IN THE FUNCTION CALL BELOW AS WELL"
     return refreet.populate('authorId');
   }
 
@@ -37,7 +35,7 @@ class ReFreetCollection {
    * @return {Promise<HydratedDocument<ReFreet>> | Promise<null> } - The downfreet with the given refreetId, if any
    */
   static async findOne(refreetId: Types.ObjectId | string): Promise<HydratedDocument<ReFreet>> {
-    return ReFreetModel.findOne({_id: refreetId}).populate('authorId');
+    return ReFreetModel.findOne({_id: refreetId, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
   }
 
   /**
@@ -47,7 +45,7 @@ class ReFreetCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<  ReFreet>>> {
     // Retrieves refreets and sorts them from most to least recent
-    return ReFreetModel.find({}).sort({dateCreated: -1}).populate('authorId');
+    return ReFreetModel.find({originalFreet: {expiringDate: {$gt: new Date()}}}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
@@ -58,7 +56,7 @@ class ReFreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<ReFreet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return ReFreetModel.find({authorId: author._id}).populate('authorId');
+    return ReFreetModel.find({authorId: author._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
   }
 
   /**
@@ -72,20 +70,6 @@ class ReFreetCollection {
     return ReFreetModel.find({originalFreet: freet._id}).populate('_id');
   }
 
-//   /**
-//    * Update a freet with the new content - NOT RELEVANT SINCE A REFREET CAN ONLY BE ADDED OR DELETED
-//    *
-//    * @param {string} freetId - The id of the freet to be updated
-//    * @param {string} content - The new content of the freet
-//    * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
-//    */
-//   static async updateOne(freetId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
-//     const freet = await FreetModel.findOne({_id: freetId});
-//     freet.originalFreet = content;
-//     freet.dateModified = new Date();
-//     await freet.save();
-//     return freet.populate('authorId');
-//   }
 
   /**
    * Delete a refreet with given refreetId.
@@ -113,6 +97,14 @@ class ReFreetCollection {
    */
   static async deleteManybyFreetId(freetId: Types.ObjectId | string ):Promise<void>{
     await ReFreetModel.deleteMany({freetId})
+  }
+
+ /**
+   * Delete all the refreets on expired freets 
+   *
+   */
+  static async deleteManybyExpiration(): Promise<void> {
+    await ReFreetModel.deleteMany({originalFreet: {expiringDate: {$lte: new Date()}}});
   }
 }
 

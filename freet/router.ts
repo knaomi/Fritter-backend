@@ -103,7 +103,8 @@ router.post(
 
   },
   [
-    
+    userValidator.isUserLoggedIn,
+    freetValidator.isValidFreetContent,
     freetValidator.isValidExpiringDate,
   ],
   async (req: Request, res: Response) => {

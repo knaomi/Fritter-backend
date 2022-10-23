@@ -69,6 +69,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+
     const refreet = await ReFreetCollection.addOne(userId, req.body.freetid);
 
     res.status(201).json({
@@ -97,6 +98,7 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     await ReFreetCollection.deleteOne(req.params.refreetId);
+    await ReFreetCollection.deleteManybyExpiration();
     res.status(200).json({
       message: 'Your refreet was deleted successfully.'
     });

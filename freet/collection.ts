@@ -103,7 +103,7 @@ class FreetCollection {
    *
    */
   static async deleteManybyExpiration(): Promise<void> {
-    await FreetModel.deleteMany({expiringDate: {$lt: new Date()}});
+    await FreetModel.deleteMany({expiringDate: {$lte: new Date()}});
   }
 
 }

@@ -108,6 +108,7 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     await DownFreetCollection.deleteOne(req.params.downfreetId);
+    await DownFreetCollection.deleteManybyExpiration();
     res.status(200).json({
       message: 'Your downfreet was deleted successfully.'
     });

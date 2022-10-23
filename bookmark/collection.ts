@@ -5,8 +5,6 @@ import UserCollection from '../user/collection';
 import FreetCollection from '../freet/collection';
 import BookMarkNestCollection from '../bookmarknest/collection';
 
-// POTENTIAL CHANGES
-// Add Function Delete BookMarks by the given nest
 
 /**
  * This files contains a class that has the functionality to explore bookmarks
@@ -41,7 +39,7 @@ class BookMarkCollection {
    * @return {Promise<HydratedDocument<BookMark>> | Promise<null> } - The bookmark with the given bookmarkId, if any
    */
   static async findOne(bookmarkId: Types.ObjectId | string): Promise<HydratedDocument<BookMark>> {
-    return BookMarkModel.findOne({_id: bookmarkId}).populate('authorId');
+    return BookMarkModel.findOne({_id: bookmarkId, originalFreet: {expiringDate: {$gt: new Date()}} }).populate('authorId');
   }
 
   /**
@@ -51,7 +49,7 @@ class BookMarkCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<BookMark>>> {
     // Retrieves bookmarks and sorts them from most to least recent
-    return BookMarkModel.find({}).sort({dateCreated: -1}).populate('authorId');
+    return BookMarkModel.find({originalFreet: {expiringDate: {$gt: new Date()}}}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
@@ -62,7 +60,7 @@ class BookMarkCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<BookMark>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return BookMarkModel.find({authorId: author._id}).populate('authorId');
+    return BookMarkModel.find({authorId: author._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
   }
 
   /**
@@ -73,7 +71,7 @@ class BookMarkCollection {
    */
    static async findAllByNestId(nestId:Types.ObjectId | string): Promise<Array<HydratedDocument<BookMark>>> {
     const nest = await BookMarkNestCollection.findOne(nestId);
-    return BookMarkModel.find({nestId: nest._id}).populate('nestId');
+    return BookMarkModel.find({nestId: nest._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('nestId');
   }
 
   /**
@@ -121,6 +119,14 @@ class BookMarkCollection {
    static async deleteManybyBookMarkNestId(bookmarknestId: Types.ObjectId | string ):Promise<void>{
     await BookMarkModel.deleteMany({bookmarknestId})
   }  
+
+ /**
+   * Delete all the bookmarks on expired freets 
+   *
+   */
+  static async deleteManybyExpiration(): Promise<void> {
+    await BookMarkModel.deleteMany({originalFreet: {expiringDate: {$lte: new Date()}}});
+  }
 
 }
 
