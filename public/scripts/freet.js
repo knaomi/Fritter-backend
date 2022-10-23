@@ -18,7 +18,13 @@ function viewFreetsByAuthor(fields) {
 }
 
 function createFreet(fields) {
-  fetch('/api/freets', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+  fetch(`/api/freets`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function createExpiringFreet(fields) {
+  fetch(`/api/freets?expiringdate=${fields.expiringdate}&expiringtime=${fields.expiringtime}`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }

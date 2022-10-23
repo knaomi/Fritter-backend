@@ -14,9 +14,7 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
-  // "SHOULD I INCLUDE REFREETS, DOWNFFREETS LIKES HERE  SUCH THAT"
-  // "REFREETS: ARRAY<TYPES.OBJECTID>"
-  // "THESE FILEDS WOULD BE AUTOPOPULATED TO SHOW ALL THE REACTIONS ON THE REFREET"
+  expiringDate: Date; // the date after which the freet will no longer be available
 
 };
 
@@ -26,8 +24,7 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
-  // downfreetingUsers?: Array<Types.ObjectId>;
-  // downfreetsNumber? : Number;
+  expiringDate: Date;
 
 };
 
@@ -56,29 +53,12 @@ const FreetSchema = new Schema<Freet>({
   dateModified: {
     type: Date,
     required: true
+  },
+  expiringDate: {
+    type: Date,
+    required: false // BUT there is a default value set
   }
 });
-
-// // (virtual-population)
-// // Auto-populate a DownFreet.downfreeting_users field with any downFreets are associated with the originalFreet
-// // such that a Freet.id = DownFreet.originalFreet._id
-// FreetSchema.virtual('downfreetingUsers',{
-//     ref: 'DownFreet',
-//     localField: '_id',
-//     foreignField: 'originalFreet'
-
-// })
-
-
-// FreetSchema.virtual('downfreetsNumber')
-//     .get(function () {
-//             return this.downfreetingUsers;
-//     })
-//     .set(function (usersDownfreeting: Array<Types.ObjectId>){
-//         this.downfreetsNumber =usersDownfreeting.length
-//     })
-
-// // move the above two to Freet if it does not work
 
 
 const FreetModel = model<Freet>('Freet', FreetSchema);

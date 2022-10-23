@@ -1,5 +1,5 @@
 import type {Request, Response, NextFunction} from 'express';
-import {Types} from 'mongoose';
+import mongoose, {MongooseError, Types} from 'mongoose';
 import FreetCollection from '../freet/collection';
 
 /**
@@ -25,6 +25,7 @@ const isFreetExists = async (req: Request, res: Response, next: NextFunction) =>
  * spaces and not more than 140 characters
  */
 const isValidFreetContent = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body)
   const {content} = req.body as {content: string};
   if (!content.trim()) {
     res.status(400).json({
@@ -40,6 +41,45 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
     return;
   }
 
+  next();
+};
+
+/**
+ * Checks if the expiration date of the freet in req.query is valid
+ * i.e. year >= new Date().year, 1<=month<=12, 1<=day <=31
+ */
+ const isValidExpiringDate = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("req.query", req.query)
+  const expirationdate = req.query.expiringdate;
+  const expiringtime = req.query.expiringtime;
+  const date  = expirationdate + 'T' + expiringtime + ':00Z' ;
+  console.log("date created", new Date(date), date)
+
+  // if (!expirationdate.trim()) {
+  //   res.status(400).json({
+  //     error: 'Freet content must be at least one character long.'
+  //   });
+  //   return;
+  // }
+
+  // if (expirationdate.length > 140) {
+  //   res.status(413).json({
+  //     error: 'Freet content must be no more than 140 characters.'
+  //   });
+  //   return;
+  // }
+  // CHECKS:
+
+  // year >
+  const freet = await FreetCollection.addOne(req.session.userId, "test run ", new Date(date));
+  if (freet.validateSync()?.errors["expiringDate"] instanceof mongoose.Error.ValidatorError){
+    await FreetCollection.deleteOne(freet._id)
+    res.status(400).json({
+      error: "A correct date format must be provided"
+    });
+    return;
+  }
+  await FreetCollection.deleteOne(freet._id);
   next();
 };
 
@@ -62,5 +102,6 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
 export {
   isValidFreetContent,
   isFreetExists,
-  isValidFreetModifier
+  isValidFreetModifier,
+  isValidExpiringDate,
 };

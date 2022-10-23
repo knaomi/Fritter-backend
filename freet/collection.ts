@@ -19,13 +19,14 @@ class FreetCollection {
    * @param {string} content - The id of the content of the freet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
+  static async addOne(authorId: Types.ObjectId | string, content: string, expiringDate =new Date("9999-12-28")): Promise<HydratedDocument<Freet>> {
     const date = new Date();
     const freet = new FreetModel({
       authorId,
       dateCreated: date,
       content,
-      dateModified: date
+      dateModified: date,
+      expiringDate,
     });
     await freet.save(); // Saves freet to MongoDB
     return freet.populate('authorId');
@@ -38,7 +39,7 @@ class FreetCollection {
    * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The freet with the given freetId, if any
    */
   static async findOne(freetId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
-    return FreetModel.findOne({_id: freetId}).populate('authorId');
+    return FreetModel.findOne({_id: freetId, expiringDate: {$gt: new Date()} }).populate('authorId');
   }
 
   /**
@@ -48,7 +49,7 @@ class FreetCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<Freet>>> {
     // Retrieves freets and sorts them from most to least recent
-    return FreetModel.find({}).sort({dateModified: -1}).populate('authorId');
+    return FreetModel.find({expiringDate: {$gt: new Date()}}).sort({dateModified: -1}).populate('authorId');
   }
 
   /**
@@ -59,7 +60,7 @@ class FreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return FreetModel.find({authorId: author._id}).populate('authorId');
+    return FreetModel.find({authorId: author._id, expiringDate: {$gt: new Date()} }).populate('authorId');
   }
 
   /**
@@ -96,6 +97,15 @@ class FreetCollection {
   static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
     await FreetModel.deleteMany({authorId});
   }
+
+ /**
+   * Delete all the expired freets 
+   *
+   */
+  static async deleteManybyExpiration(): Promise<void> {
+    await FreetModel.deleteMany({expiringDate: {$lt: new Date()}});
+  }
+
 }
 
 export default FreetCollection;

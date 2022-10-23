@@ -54,7 +54,7 @@ router.get(
 );
 
 /**
- * Create a new freet.
+ * Create a new freet that has no expiration date.
  *
  * @name POST /api/freets
  *
@@ -63,16 +63,58 @@ router.get(
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the freet content is empty or a stream of empty spaces
  * @throws {413} - If the freet content is more than 140 characters long
+ * @throws {400} = If the expiring time is incorrect
+ * 
+ */
+
+/**
+ * Create a new freet expiring at a specified time.
+ *
+ * @name POST /api/freets?expiringdate=date&expiringtime=time
+ *
+ * @param {string} content - The content of the freet
+ * @return {FreetResponse} - The created freet
+ * @throws {403} - If the user is not logged in
+ * @throws {400} - If the freet content is empty or a stream of empty spaces
+ * @throws {413} - If the freet content is more than 140 characters long
+ * @throws {400} = If the expiring time is incorrect
+ * 
  */
 router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isValidFreetContent
+    freetValidator.isValidFreetContent,
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Check if authorId query parameter was supplied
+    if (req.query.expiringdate !== undefined) {
+      next();
+      return;
+    }
+
+    const userId = (req.session.userId as string) ?? '';
+    const freet = await FreetCollection.addOne(userId, req.body.content);
+    freet.validateSync()
+    res.status(201).json({
+      message: 'Your freet was created successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+
+  },
+  [
+    
+    freetValidator.isValidExpiringDate,
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freet = await FreetCollection.addOne(userId, req.body.content);
+    const expiringdate = req.query.expiringdate;
+      //  const {expirationdate} = req.query.expiringdate as {expirationdate: string};
+    const expiringtime = req.query.expiringtime;
+    const date  = expiringdate + 'T' + expiringtime + ':00' ;    
+    
+    const freet = await FreetCollection.addOne(userId, req.body.content, new Date(date));
+    freet.validateSync()
 
     res.status(201).json({
       message: 'Your freet was created successfully.',

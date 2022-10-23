@@ -37,6 +37,7 @@ const formsAndHandlers = {
   'view-all-freets': viewAllFreets,
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,
+  'create-freet-with-expiringtime': createExpiringFreet,
   'edit-freet': editFreet,
   'delete-freet': deleteFreet,
   'view-all-freetdrafts': viewAllFreetDrafts,

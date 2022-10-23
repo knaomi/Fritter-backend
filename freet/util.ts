@@ -9,6 +9,7 @@ type FreetResponse = {
   dateCreated: string;
   content: string;
   dateModified: string;
+  expiringDate: string;
 };
 
 /**
@@ -40,6 +41,7 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     author: username,
     dateCreated: formatDate(freet.dateCreated),
     dateModified: formatDate(freet.dateModified),
+    expiringDate: formatDate(freet.expiringDate),
   };
 };
 
