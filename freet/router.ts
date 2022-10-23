@@ -5,6 +5,7 @@ import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
 import BookMarkCollection from '../bookmark/collection';
+import BookMarkNestCollection from '../bookmarknest/collection';
 import LikeCollection from '../like/collection';
 import DownFreetCollection from '../downfreet/collection';
 import ReFreetCollection from '../refreet/collection';
@@ -98,7 +99,7 @@ router.delete(
     freetValidator.isValidFreetModifier
   ],
   async (req: Request, res: Response) => {
-    // await BookMarkCollection.deleteManybyFreetId(req.params.freetId); BOOKMARK ROUTER NEEDS FIXING
+    await BookMarkCollection.deleteManybyFreetId(req.params.freetId); 
     await DownFreetCollection.deleteManybyFreetId(req.params.freetId);
     await LikeCollection.deleteManybyFreetId(req.params.freetId);
     await ReFreetCollection.deleteManybyFreetId(req.params.freetId);
