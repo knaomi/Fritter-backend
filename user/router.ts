@@ -13,8 +13,6 @@ import BookMarkNestCollection from '../bookmarknest/collection';
 
 const router = express.Router();
 
-// CHANGES NEEDED
-// CREATE A NEW BOOKMARKNEST FOR THE NEW USER BEFORE RETURNING
 /**
  * Sign in user.
  *

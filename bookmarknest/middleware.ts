@@ -25,6 +25,22 @@ const isValidNestname = (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
+/**
+ * Checks if the freetid in req.body is valid.
+ */
+ const isValidFreetId = async (req: Request, res: Response, next: NextFunction) => {
+  const validFormat = Types.ObjectId.isValid(req.body.freetid);
+  const freet = validFormat ? await FreetCollection.findOne(req.body.freetid) : '';
+  if (!freet) {
+    res.status(404).json({
+      error: {
+        freetNotFound: `Freet with freet ID ${req.body.freetid} does not exist.`
+      }
+    });
+    return;
+  };
+  next();
+};
 
 /**
  * Checks if a bookmarknest with bookmarknestId is req.params exists
@@ -135,4 +151,5 @@ export {
   isNestnameNotAlreadyInUse, 
   isValidBookMarkNestViewer,
   isValidBookMarkNestModifier,
+  isValidFreetId,
 };

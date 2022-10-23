@@ -47,7 +47,7 @@ const formsAndHandlers = {
   'view-all-bookmarks': viewAllBookMarks,
   'view-bookmarks-by-author': viewBookMarksByAuthor,
   'create-bookmark-in-existing-nest': createBookMark,
-  // 'create-bookmark-in-new-nest': createBookMarkNewNest,
+  'create-bookmark-in-new-nest': createBookMarkNewNest,
   'delete-bookmark': deleteBookMark,
   'view-all-bookmarknests': viewAllBookMarkNests,
   'view-bookmarknests-by-author': viewBookMarkNestsByAuthor,

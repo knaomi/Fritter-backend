@@ -6,6 +6,7 @@ import * as userValidator from '../user/middleware';
 import * as bookmarknestValidator from './middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
+import * as bookmarkutil from '../bookmark/util'
 
 const router = express.Router();
 
@@ -77,6 +78,41 @@ router.post(
     res.status(201).json({
       message: 'Your bookmarknest was created successfully.',
       bookmarknest: util.constructBookMarkNestResponse(bookmarknest)
+    });
+  }
+);
+
+/**
+ * Create a new bookmark in a new bookmarknest on a Freet identified by Id.
+ *
+ * @name POST /api/bookmarknests/:nestname/bookmarks   
+//  * /:id
+ *
+//  * @param {string} nestname - The name of the BookMarkNest that the user is creating.
+ * @param {string} freetid - the id of the freet that the user is bookmarking
+ * @return {BookMarkNestResponse} - The created bookmark
+ * @throws {403} - If the user is not logged in
+ * @throws {400} - If the user had already a nest with the same nestname.
+ */
+ router.post(
+  '/:nestname/bookmarks/:freetId',
+  [
+    userValidator.isUserLoggedIn,
+    bookmarknestValidator.isValidNestname,
+    bookmarknestValidator.isNestnameNotAlreadyInUse,
+    // bookmarknestValidator.isValidFreetId, // for req.body
+    freetValidator.isFreetExists,
+
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    console.log("req received in router", req)
+    const bookmarknest = await BookMarkNestCollection.addOne(userId, req.params.nestname);
+    const bookmark = await BookMarkCollection.addOne(userId, bookmarknest._id, req.params.freetId);
+    res.status(201).json({
+      message: 'Your bookmarknest was created successfully.',
+      bookmarknest: util.constructBookMarkNestResponse(bookmarknest),
+      bookmark: bookmarkutil.constructBookMarkResponse(bookmark),
     });
   }
 );
