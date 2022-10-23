@@ -133,17 +133,22 @@ router.delete(
     userValidator.isUserLoggedIn,
     bookmarknestValidator.isBookMarkNestExists,
     bookmarknestValidator.isValidBookMarkNestModifier,
-    bookmarknestValidator.isBookMarkNestTheRoot,
+    // bookmarknestValidator.isBookMarkNestTheRoot,
   ],
   async (req: Request, res: Response) => {
-    // CHANGE THIS LATER ON SO THAT
-    // IF BOOKMARKNESTDEFAULT: ONLY DELETE THE BOOKMARKS, KEEP THE ROOT
-    // IF NOT DEFAULT: DO WHAT IS BEING DONE BELOW 
     await BookMarkCollection.deleteManybyBookMarkNestId(req.params.bookmarknestId);
-    await BookMarkNestCollection.deleteOne(req.params.bookmarknestId);
-    res.status(200).json({
-      message: 'Your bookmarknest was deleted successfully.'
-    });
+
+    if (bookmarknestValidator.isBookMarkNestTheRoot){
+      res.status(200).json({
+        message: 'All bookmarked freets were cleared from Root bookmarknest successfully.'
+      });
+    }
+    else{
+      await BookMarkNestCollection.deleteOne(req.params.bookmarknestId);
+      res.status(200).json({
+        message: 'Your bookmarknest and all its bookmarks was deleted successfully.'
+      });
+    }
   }
 );
 

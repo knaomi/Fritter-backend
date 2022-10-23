@@ -59,6 +59,25 @@ const isBookMarkNestExists = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
+// /**
+//  * Checks if a bookmarknest with  bookmarknestId is req.params is the root bookmarknest a.k.a folder.
+//  * 
+//  * This is only called in functions that modify the bookmark nest such as edit name, or delete
+//  */
+//  const isBookMarkNestTheRoot = async (req: Request, res: Response, next: NextFunction) => {
+//     const validFormat = Types.ObjectId.isValid(req.params.bookmarknestId);
+//     const bookmarknest = validFormat ? await BookMarkNestCollection.findOne(req.params.bookmarknestId) : '';
+//     if (bookmarknest && bookmarknest.defaultRootNest) {
+//       res.status(404).json({
+//         error: {
+//           bookmarkNestRootError: `The root (default) BookMarkNest with bookmarknest ID ${req.params.bookmarknestId} cannot be modified by a user.`
+//         }
+//       });
+//       return;
+//     }
+//     next();
+//   };
+
 /**
  * Checks if a bookmarknest with  bookmarknestId is req.params is the root bookmarknest a.k.a folder.
  * 
@@ -68,16 +87,15 @@ const isBookMarkNestExists = async (req: Request, res: Response, next: NextFunct
     const validFormat = Types.ObjectId.isValid(req.params.bookmarknestId);
     const bookmarknest = validFormat ? await BookMarkNestCollection.findOne(req.params.bookmarknestId) : '';
     if (bookmarknest && bookmarknest.defaultRootNest) {
-      res.status(404).json({
-        error: {
-          bookmarkNestRootError: `The root (default) BookMarkNest with bookmarknest ID ${req.params.bookmarknestId} cannot be modified by a user.`
-        }
-      });
-      return;
+      // res.status(404).json({
+      //   error: {
+      //     bookmarkNestRootError: `The root (default) BookMarkNest with bookmarknest ID ${req.params.bookmarknestId} cannot be modified by a user.`
+      //   }
+      // });
+      return true;
     }
     next();
   };
-
 
 
 
