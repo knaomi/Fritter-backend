@@ -94,9 +94,13 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const user = await UserCollection.addOne(req.body.username, req.body.password);
+    const defaultBookMarkNest = await BookMarkNestCollection.addOne(user._id, "RootNest", true);
     req.session.userId = user._id.toString();
     res.status(201).json({
-      message: `Your account was created successfully. You have been logged in as ${user.username}`,
+      message: 'Your account was created successfully.\n'+
+        `You have been logged in as ${user.username} and a \n`+
+        'Default Root BookMarkNest has been created for you \n'+
+        `${defaultBookMarkNest.nestname} ${defaultBookMarkNest.defaultRootNest}`,
       user: util.constructUserResponse(user)
     });
   }
