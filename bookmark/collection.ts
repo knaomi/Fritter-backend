@@ -126,7 +126,7 @@ class BookMarkCollection {
    *
    */
   static async deleteManybyExpiration(): Promise<void> {
-    await BookMarkModel.deleteMany({originalFreet: {expiringDate: {$lte: new Date()}}});
+    await BookMarkModel.deleteMany({expiringDate: {$lte: new Date()}});
   }
 
 }

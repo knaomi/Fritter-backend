@@ -22,7 +22,9 @@ class ReFreetCollection {
     const refreet = new ReFreetModel({
       authorId,
       originalFreet,
-      dateCreated: date
+      dateCreated: date,
+      expiringDate: (await FreetCollection.findOne(originalFreet))?.expiringDate,
+
     });
     await refreet.save(); // Saves downfreet to MongoDB
     return refreet.populate('authorId');
@@ -35,7 +37,7 @@ class ReFreetCollection {
    * @return {Promise<HydratedDocument<ReFreet>> | Promise<null> } - The downfreet with the given refreetId, if any
    */
   static async findOne(refreetId: Types.ObjectId | string): Promise<HydratedDocument<ReFreet>> {
-    return ReFreetModel.findOne({_id: refreetId, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return ReFreetModel.findOne({_id: refreetId, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
   /**
@@ -45,7 +47,7 @@ class ReFreetCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<  ReFreet>>> {
     // Retrieves refreets and sorts them from most to least recent
-    return ReFreetModel.find({originalFreet: {expiringDate: {$gt: new Date()}}}).sort({dateCreated: -1}).populate('authorId');
+    return ReFreetModel.find({expiringDate: {$gt: new Date()}}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
@@ -56,7 +58,7 @@ class ReFreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<ReFreet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return ReFreetModel.find({authorId: author._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return ReFreetModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
   /**
@@ -104,7 +106,7 @@ class ReFreetCollection {
    *
    */
   static async deleteManybyExpiration(): Promise<void> {
-    await ReFreetModel.deleteMany({originalFreet: {expiringDate: {$lte: new Date()}}});
+    await ReFreetModel.deleteMany({expiringDate: {$lte: new Date()}});
   }
 }
 

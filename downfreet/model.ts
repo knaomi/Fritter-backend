@@ -14,7 +14,7 @@ export type DownFreet = {
   authorId: Types.ObjectId;
   originalFreet: Types.ObjectId;
   dateCreated: Date;
-
+  expiringDate: Date;
 };
 
 export type PopulatedDownFreet = {
@@ -22,6 +22,7 @@ export type PopulatedDownFreet = {
   authorId: User;
   originalFreet: Freet;
   dateCreated: Date;
+  expiringDate: Date;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -46,7 +47,12 @@ const DownFreetSchema = new Schema<DownFreet>({
   dateCreated:{
     type:Date,
     required: true
+  },
+  expiringDate:{
+    type:Date,
+    required: false // dependent on freet having an expiration date
   }
+
 
 });
 

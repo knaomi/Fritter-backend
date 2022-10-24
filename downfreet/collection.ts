@@ -22,7 +22,8 @@ class DownFreetCollection {
     const downfreet = new DownFreetModel({
       authorId,
       originalFreet,
-      dateCreated: date
+      dateCreated: date,
+      expiringDate: (await FreetCollection.findOne(originalFreet))?.expiringDate,
     });
     await downfreet.save(); // Saves downfreet to MongoDB
     return downfreet.populate('authorId');
@@ -35,7 +36,7 @@ class DownFreetCollection {
    * @return {Promise<HydratedDocument<DownFreet>> | Promise<null> } - The downfreet with the given downfreetId, if any
    */
   static async findOne(downfreetId: Types.ObjectId | string): Promise<HydratedDocument<DownFreet>> {
-    return DownFreetModel.findOne({_id: downfreetId, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return DownFreetModel.findOne({_id: downfreetId, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
 
@@ -62,7 +63,7 @@ class DownFreetCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<DownFreet>>> {
     // Retrieves downfreets and sorts them from most to least recent
-    return DownFreetModel.find({originalFreet: {expiringDate: {$gt: new Date()}}}).sort({dateCreated: -1}).populate('authorId');
+    return DownFreetModel.find({expiringDate: {$gt: new Date()}}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
@@ -73,7 +74,7 @@ class DownFreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<DownFreet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return DownFreetModel.find({authorId: author._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return DownFreetModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
   /**
@@ -121,7 +122,7 @@ class DownFreetCollection {
    *
    */
   static async deleteManybyExpiration(): Promise<void> {
-    await DownFreetModel.deleteMany({originalFreet: {expiringDate: {$lte: new Date()}}});
+    await DownFreetModel.deleteMany({expiringDate: {$lte: new Date()}});
   }
 }
 

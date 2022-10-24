@@ -14,6 +14,7 @@ export type ReFreet = {
   authorId: Types.ObjectId;
   originalFreet: Types.ObjectId;
   dateCreated: Date;
+  expiringDate: Date;
 
 };
 
@@ -22,6 +23,8 @@ export type PopulatedReFreet = {
   authorId: User;
   originalFreet: Freet;
   dateCreated: Date;
+  expiringDate: Date;
+
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -46,7 +49,11 @@ const ReFreetSchema = new Schema<ReFreet>({
   dateCreated:{
     type:Date,
     required: true
-  }
+  },
+  expiringDate:{
+    type:Date,
+    required: false,
+  },
 
 });
 

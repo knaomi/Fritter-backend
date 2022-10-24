@@ -22,7 +22,9 @@ class LikeCollection {
     const like = new LikeModel({
       authorId,
       originalFreet,
-      dateCreated: date
+      dateCreated: date,
+      expiringDate: (await FreetCollection.findOne(originalFreet))?.expiringDate,
+
     });
     await like.save(); // Saves like to MongoDB
     return like.populate('authorId');
@@ -36,7 +38,7 @@ class LikeCollection {
    * @return {Promise<HydratedDocument<Like>> | Promise<null> } - The like with the given likeId, if any
    */
   static async findOne(likeId: Types.ObjectId | string): Promise<HydratedDocument<Like>> {
-    return LikeModel.findOne({_id: likeId, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return LikeModel.findOne({_id: likeId, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
 
@@ -63,7 +65,7 @@ class LikeCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<Like>>> {
     // Retrieves likes and sorts them from most to least recent
-    return LikeModel.find({originalFreet: {expiringDate: {$gt: new Date()}}}).sort({dateCreated: -1}).populate('authorId');
+    return LikeModel.find({expiringDate: {$gt: new Date()}}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
@@ -74,7 +76,7 @@ class LikeCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Like>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return LikeModel.find({authorId: author._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return LikeModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
   /**
@@ -121,7 +123,7 @@ class LikeCollection {
    *
    */
   static async deleteManybyExpiration(): Promise<void> {
-    await LikeModel.deleteMany({originalFreet: {expiringDate: {$lte: new Date()}}});
+    await LikeModel.deleteMany({expiringDate: {$lte: new Date()}});
   }
 }
 
