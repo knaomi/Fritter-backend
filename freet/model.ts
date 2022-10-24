@@ -56,7 +56,9 @@ const FreetSchema = new Schema<Freet>({
   },
   expiringDate: {
     type: Date,
-    required: false // BUT there is a default value set
+    required: false, // BUT there is a default value set
+    // min: new Date(),
+
   }
 });
 

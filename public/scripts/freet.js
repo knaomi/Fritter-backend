@@ -24,7 +24,12 @@ function createFreet(fields) {
 }
 
 function createExpiringFreet(fields) {
-  fetch(`/api/freets?expiringdate=${fields.expiringdate}&expiringtime=${fields.expiringtime}`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+  fetch(`/api/freets?expiringyear=${fields.expiringyear}`+
+    `&expiringmonth=${fields.expiringmonth}`+
+    `&expiringdate=${fields.expiringdate}` +
+    `&expiringhour=${fields.expiringhour}` +
+    `&expiringminute=${fields.expiringminute}` , 
+    {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }

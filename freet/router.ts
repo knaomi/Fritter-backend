@@ -9,6 +9,8 @@ import BookMarkNestCollection from '../bookmarknest/collection';
 import LikeCollection from '../like/collection';
 import DownFreetCollection from '../downfreet/collection';
 import ReFreetCollection from '../refreet/collection';
+import moment from 'moment';
+
 
 const router = express.Router();
 
@@ -70,14 +72,15 @@ router.get(
 /**
  * Create a new freet expiring at a specified time.
  *
- * @name POST /api/freets?expiringdate=date&expiringtime=time
+ * @name POST /api/freets?expiringyear=year&expiringmonth=month&expiringdate=date&expiringhour=hour
+ * &expiringminute=minute
  *
  * @param {string} content - The content of the freet
  * @return {FreetResponse} - The created freet
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the freet content is empty or a stream of empty spaces
  * @throws {413} - If the freet content is more than 140 characters long
- * @throws {400} = If the expiring time is incorrect
+ * @throws {412} = If the expiring time is incorrect
  * 
  */
 router.post(
@@ -108,13 +111,17 @@ router.post(
     freetValidator.isValidExpiringDate,
   ],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const expiringdate = req.query.expiringdate;
-      //  const {expirationdate} = req.query.expiringdate as {expirationdate: string};
-    const expiringtime = req.query.expiringtime;
-    const date  = expiringdate + 'T' + expiringtime + ':00' ;    
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn 
     
-    const freet = await FreetCollection.addOne(userId, req.body.content, new Date(date));
+    const expiringyear=req.query.expiringyear;
+    const expiringmonth = req.query.expiringmonth;
+    const expiringdate = req.query.expiringdate;
+    const expiringhour = req.query.expiringhour;
+    const expiringminute = req.query.expiringminute;
+
+    const date = new Date(expiringyear+"-"+expiringmonth+"-"+expiringdate+"T"+expiringhour+":"+expiringminute+":0")
+    
+    const freet = await FreetCollection.addOne(userId, req.body.content, date);
     freet.validateSync()
 
     res.status(201).json({

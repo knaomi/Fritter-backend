@@ -1,6 +1,8 @@
 import type {Request, Response, NextFunction} from 'express';
 import mongoose, {MongooseError, Types} from 'mongoose';
 import FreetCollection from '../freet/collection';
+import moment, { invalid } from 'moment';
+
 
 /**
  * Checks if a freet with freetId is req.params exists
@@ -49,38 +51,45 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
  * i.e. year >= new Date().year, 1<=month<=12, 1<=day <=31
  */
  const isValidExpiringDate = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("req.query", req.query)
-  const expirationdate = req.query.expiringdate;
-  const expiringtime = req.query.expiringtime;
-  const date  = expirationdate + 'T' + expiringtime + ':00Z' ;
-  console.log("date created", new Date(date), date)
+  // console.log("req.query", req.query)
+  // const expirationdate = req.query.expiringdate;
+  // const expiringtime = req.query.expiringtime;
+  // const date  = expirationdate + 'T' + expiringtime + ':00Z' ;
+  // console.log("date created", new Date(date), date)
 
-  // if (!expirationdate.trim()) {
-  //   res.status(400).json({
-  //     error: 'Freet content must be at least one character long.'
-  //   });
-  //   return;
-  // }
+  const expiringyear=req.query.expiringyear;
+  const expiringmonth = req.query.expiringmonth;
+  const expiringdate = req.query.expiringdate;
+  const expiringhour = req.query.expiringhour;
+  const expiringminute = req.query.expiringminute;
 
-  // if (expirationdate.length > 140) {
-  //   res.status(413).json({
-  //     error: 'Freet content must be no more than 140 characters.'
-  //   });
-  //   return;
-  // }
-  // CHECKS:
-
-  // year >
-  const freet = await FreetCollection.addOne(req.session.userId, "test run ", new Date(date));
-  if (freet.validateSync()?.errors["expiringDate"] instanceof mongoose.Error.ValidatorError){
-    await FreetCollection.deleteOne(freet._id)
-    res.status(400).json({
-      error: "A correct date format must be provided"
+  const date = moment(expiringyear+"-"+expiringmonth+"-"+expiringdate+"T"+expiringhour+":"+expiringminute)
+  if (!date.isValid()){
+    res.status(412).json({
+      error: "A correct date format must be provided that is not set in the past"
     });
-    return;
-  }
-  await FreetCollection.deleteOne(freet._id);
+    return; 
+  }  
+  // else if (date <= moment()){
+  //   res.status(400).json({
+  //     error: "One cannot set an expiration date that is in the past"
+  //   });
+  //   return; 
+  // }
   next();
+
+
+  // const freet = await FreetCollection.addOne(req.session.userId, "test run ", new Date(date));
+  // if (freet.validateSync().errors['expiringDate'] instanceof mongoose.Error.ValidatorError){
+  //   console.log("error found", typeof freet.validateSync().errors["expiringDate"] )
+  //   // await FreetCollection.deleteOne(freet._id)
+  //   res.status(400).json({
+  //     error: "A correct date format must be provided and one that is not in the past"
+  //   });
+  //   return;
+  // }
+  // await FreetCollection.deleteOne(freet._id);
+  // next();
 };
 
 /**
