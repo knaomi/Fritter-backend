@@ -41,7 +41,7 @@ const formsAndHandlers = {
   'edit-freet': editFreet,
   'delete-freet': deleteFreet,
   'view-all-freetdrafts': viewAllFreetDrafts,
-  'view-freetdrafts-by-author': viewFreetDraftsByAuthor,
+  // 'view-freetdrafts-by-author': viewFreetDraftsByAuthor,
   'create-freetdraft': createFreetDraft,
   'edit-freetdraft': editFreetDraft,
   'delete-freetdraft': deleteFreetDraft,

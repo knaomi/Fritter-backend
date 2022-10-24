@@ -22,31 +22,33 @@ const router = express.Router();
  * TODO: CHANGE THIS TO LOOK LIKE POST API, WHERE YOU VALIDATE ONE IS SIGNED IN AND RETURN THE 
  * DRAFTS FOR THE SPECIFIC AUTHOR SIGNED IN 
  *
- * @name GET /api/freetdrafts?authorId=id
+ * @name GET /api/freetdrafts //?authorId=id = NOT NEEDED SINCE A USER CAN ONLY SEE THEIR OWN
  *
  * @return {FreetDraftResponse[]} - An array of freetdrafts created by user with id, authorId
- * @throws {400} - If authorId is not given
- * @throws {404} - If no user has given authorId
+//  * @throws {400} - If authorId is not given
+ * @throws {403} - If user is not logged in
  *
  */
 router.get(
   '/',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
-      next();
-      return;
-    }
+  // NOT APPLICABLE SINCE YOU CANNOT VIEW ANY OTHER PERSON'S FREET DRAFTS
+  // async (req: Request, res: Response, next: NextFunction) => {
+  //   // Check if authorId query parameter was supplied
+  //   if (req.query.author !== undefined) {
+  //     next();
+  //     return;
+  //   }
 
-    const allFreetDrafts = await FreetDraftCollection.findAll();
-    const response = allFreetDrafts.map(util.constructFreetDraftResponse);
-    res.status(200).json(response);
-  },
+  //   const allFreetDrafts = await FreetDraftCollection.findAll();
+  //   const response = allFreetDrafts.map(util.constructFreetDraftResponse);
+  //   res.status(200).json(response);
+  // },
   [
-    userValidator.isAuthorExists
+    userValidator.isUserLoggedIn,
   ],
   async (req: Request, res: Response) => {
-    const authorFreetDrafts = await FreetDraftCollection.findAllByUsername(req.query.author as string);
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const authorFreetDrafts = await FreetDraftCollection.findAllByAuthorId(userId);
     const response = authorFreetDrafts.map(util.constructFreetDraftResponse);
     res.status(200).json(response);
   }
@@ -106,7 +108,7 @@ router.delete(
 );
 
 /**
- * Modify a freetdraft
+ * Modify a freetdraft (the contents)
  *
  * @name PUT /api/freetdrafts/:id
  *
@@ -134,5 +136,13 @@ router.put(
     });
   }
 );
+
+/**
+ * Publish a freet draft on Fritter
+ * 
+ * @name POST /api/freetdrafts/scheduledfreets/ id
+ * 
+ */
+
 
 export {router as freetdraftRouter};

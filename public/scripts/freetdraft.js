@@ -11,11 +11,11 @@
       .catch(showResponse);
   }
   
-  function viewFreetDraftsByAuthor(fields) {
-    fetch(`/api/freetdrafts?author=${fields.author}`)
-      .then(showResponse)
-      .catch(showResponse);
-  }
+  // function viewFreetDraftsByAuthor(fields) {
+  //   fetch(`/api/freetdrafts?author=${fields.author}`)
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
   
   function createFreetDraft(fields) {
     fetch('/api/freetdrafts', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})

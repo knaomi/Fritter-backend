@@ -66,6 +66,17 @@ class FreetDraftCollection {
   }
 
   /**
+   * Get all the freetdrafts in by given author
+   *
+   * @param {string} userid - The userid of author of the freetdrafts
+   * @return {Promise<HydratedDocument<FreetDraft>[]>} - An array of all of the freetdrafts
+   */
+   static async findAllByAuthorId(userid: Types.ObjectId |string): Promise<Array<HydratedDocument<FreetDraft>>> {
+    const author = await UserCollection.findOneByUserId(userid);
+    return FreetDraftModel.find({authorId: author._id}).populate('authorId');
+  }
+
+  /**
    * Update a freetdraft with the new content
    *
    * @param {string} freetdraftId - The id of the freetdraft to be updated
