@@ -8,7 +8,7 @@ import BookMarkNestCollection from '../bookmarknest/collection';
  * Checks if a bookmark with bookmarkId is req.params exists
  */
 const isBookMarkExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.body.bookmarkId);
+  const validFormat = Types.ObjectId.isValid(req.params.bookmarkId);
   const bookmark = validFormat ? await BookMarkCollection.findOne(req.params.bookmarkId) : '';
   if (!bookmark) {
     res.status(404).json({
