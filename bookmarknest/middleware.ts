@@ -83,18 +83,14 @@ const isBookMarkNestExists = async (req: Request, res: Response, next: NextFunct
  * 
  * This is only called in functions that modify the bookmark nest such as edit name, or delete
  */
- const isBookMarkNestTheRoot = async (req: Request, res: Response, next: NextFunction) => {
-    const validFormat = Types.ObjectId.isValid(req.params.bookmarknestId);
-    const bookmarknest = validFormat ? await BookMarkNestCollection.findOne(req.params.bookmarknestId) : '';
-    if (bookmarknest && bookmarknest.defaultRootNest) {
-      // res.status(404).json({
-      //   error: {
-      //     bookmarkNestRootError: `The root (default) BookMarkNest with bookmarknest ID ${req.params.bookmarknestId} cannot be modified by a user.`
-      //   }
-      // });
+ const isBookMarkNestTheRoot = async (bookmarknestId:Types.ObjectId|string) => {
+    const validFormat = Types.ObjectId.isValid(bookmarknestId);
+    const bookmarknest = validFormat ? await BookMarkNestCollection.findOne(bookmarknestId) : '';
+    if (bookmarknest!== '' && bookmarknest.defaultRootNest) {
       return true;
     }
-    next();
+    return false;
+    
   };
 
 

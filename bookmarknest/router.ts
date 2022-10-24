@@ -141,9 +141,9 @@ router.delete(
   async (req: Request, res: Response) => {
     await BookMarkCollection.deleteManybyBookMarkNestId(req.params.bookmarknestId);
 
-    if (bookmarknestValidator.isBookMarkNestTheRoot){
+    if (await bookmarknestValidator.isBookMarkNestTheRoot(req.params.bookmarknestId)){
       res.status(200).json({
-        message: 'All bookmarked freets were cleared from Root bookmarknest successfully.'
+        message: `All bookmarked freets were cleared from Root bookmarknest successfully.`
       });
     }
     else{

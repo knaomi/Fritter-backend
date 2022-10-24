@@ -12,7 +12,7 @@ import BookMarkNestCollection from '../bookmarknest/collection';
 const router = express.Router();
 
 /**
- * Get all the bookmarks (by user)
+ * Get all the bookmarks (by user signed in)
  *
  * @name GET /api/bookmarks
  *
@@ -30,8 +30,15 @@ const router = express.Router();
 //  * @return {BookMarkResponse[]} - An array of bookmarks created by user with id, authorId
 //  * @throws {400} - If authorId is not given
 //  * @throws {404} - If no user has given authorId
- 
 
+// /**
+//  * Get the number of all bookmarks on a freetid
+//  * 
+//  * @name get /api/bookmarks/:id
+//  * 
+//  * @return 
+//  */
+ 
 router.get(
   '/',
   // async (req: Request, res: Response, next: NextFunction) => {
@@ -141,7 +148,7 @@ router.delete(
     bookmarkValidator.isValidBookMarkModifier
   ],
   async (req: Request, res: Response) => {
-    await BookMarkCollection.deleteOne(req.params.bookmarkId);
+    await BookMarkCollection.deleteOne(req.params.bookmarkId.toString());
     await BookMarkCollection.deleteManybyExpiration();
     res.status(200).json({
       message: 'Your bookmark was deleted successfully.'
