@@ -119,11 +119,8 @@ router.post(
     const expiringhour = req.query.expiringhour;
     const expiringminute = req.query.expiringminute;
 
-    const date = new Date(expiringyear+"-"+expiringmonth+"-"+expiringdate+"T"+expiringhour+":"+expiringminute+":0")
-    
+    const date = new Date(expiringyear+"-"+expiringmonth+"-"+expiringdate+"T"+expiringhour+":"+expiringminute);
     const freet = await FreetCollection.addOne(userId, req.body.content, date);
-    freet.validateSync()
-
     res.status(201).json({
       message: 'Your freet was created successfully.',
       freet: util.constructFreetResponse(freet)
