@@ -60,12 +60,12 @@ const isValidFreetId = async (req: Request, res: Response, next: NextFunction) =
  * Checks if a bookmarknest with bookmarknestId is req.body exists
  */
  const isValidBookMarkNestId = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.body.id);
-  const bookmarknest = validFormat ? await BookMarkNestCollection.findOne(req.body.id) : '';
+  const validFormat = Types.ObjectId.isValid(req.body.bookmarknestid);
+  const bookmarknest = validFormat ? await BookMarkNestCollection.findOne(req.body.bookmarknestid) : '';
   if (!bookmarknest) {
     res.status(404).json({
       error: {
-        bookmarkNestNotFound: `BookMarkNest with bookmarknest ID ${req.body.id} does not exist.`
+        bookmarkNestNotFound: `BookMarkNest with bookmarknest ID ${req.body.bookmarknestid} does not exist.`
       }
     });
     return;
