@@ -12,43 +12,46 @@ import BookMarkNestCollection from '../bookmarknest/collection';
 const router = express.Router();
 
 /**
- * Get all the bookmarks
+ * Get all the bookmarks (by user)
  *
  * @name GET /api/bookmarks
  *
  * @return {BookMarkResponse[]} - A list of all the bookmarks sorted in descending
  *                      order by date added
+ * * @throws {403} - If user is not logged in
  */
-/**
- * Get bookmarks by author.
- *
- * @name GET /api/bookmarks?authorId=id
- *
- * @return {BookMarkResponse[]} - An array of bookmarks created by user with id, authorId
- * @throws {400} - If authorId is not given
- * @throws {404} - If no user has given authorId
- *
- */
+
+//  */
+// /**
+//  * Get bookmarks by author.
+//  *
+//  * @name GET /api/bookmarks?authorId=id
+//  *
+//  * @return {BookMarkResponse[]} - An array of bookmarks created by user with id, authorId
+//  * @throws {400} - If authorId is not given
+//  * @throws {404} - If no user has given authorId
+ 
+
 router.get(
   '/',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
-      next();
-      return;
-    }
-    const allBookMarks = await BookMarkCollection.findAll();
-    const response = allBookMarks.map(util.constructBookMarkResponse);
-    res.status(200).json(response);
-  },
+  // async (req: Request, res: Response, next: NextFunction) => {
+  //   // Check if authorId query parameter was supplied
+  //   if (req.query.author !== undefined) {
+  //     next();
+  //     return;
+  //   }
+  //   const allBookMarks = await BookMarkCollection.findAll();
+  //   const response = allBookMarks.map(util.constructBookMarkResponse);
+  //   res.status(200).json(response);
+  // },
   [
-    // USER IS LOGGED IN
-    userValidator.isAuthorExists,
-    bookmarkValidator.isValidBookMarkViewer,
-    //CHANGE CODE BELOW TO USE REQ.SESSION.ID
+    userValidator.isUserLoggedIn,
+    // userValidator.isAuthorExists,
+    // bookmarkValidator.isValidBookMarkViewer,
   ],
   async (req: Request, res: Response) => {
-    const authorBookMarks = await BookMarkCollection.findAllByUsername(req.query.author as string);
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const authorBookMarks = await BookMarkCollection.findAllByUserId(userId);
     const response = authorBookMarks.map(util.constructBookMarkResponse);
     res.status(200).json(response);
   }

@@ -13,42 +13,48 @@ const router = express.Router();
 // CHANGES NEEDED
 // Add method for get bookmark by nestid
 /**
- * Get all the bookmarknests
+ * Get all the bookmarknests by user who is logged in 
  *
  * @name GET /api/bookmarknests
  *
  * @return {BookMarkNestResponse[]} - A list of all the bookmarknests sorted in descending
  *                      order by date added
+ *  * @throws {403} - If the user is not logged in
  */
-/**
- * Get bookmarknests by author.
- *
- * @name GET /api/bookmarknests?authorId=id
- *
- * @return {BookMarkNestResponse[]} - An array of bookmarknests created by user with id, authorId
- * @throws {400} - If authorId is not given
- * @throws {404} - If no user has given authorId
- *
- */
+// /**
+//  * Get bookmarknests by author.
+//  *
+//  * @name GET /api/bookmarknests?authorId=id
+//  *
+//  * @return {BookMarkNestResponse[]} - An array of bookmarknests created by user with id, authorId
+//  * @throws {400} - If authorId is not given
+//  * @throws {404} - If no user has given authorId
+//  *
+//  */
 router.get(
   '/',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
-      next();
-      return;
-    }
-    const allBookMarkNests = await BookMarkNestCollection.findAll();
-    const response = allBookMarkNests.map(util.constructBookMarkNestResponse);
-    res.status(200).json(response);
-  },
+  // async (req: Request, res: Response, next: NextFunction) => {
+  //   // Check if authorId query parameter was supplied
+  //   if (req.query.author !== undefined) {
+  //     next();
+  //     return;
+  //   }
+  //   const allBookMarkNests = await BookMarkNestCollection.findAll();
+  //   const response = allBookMarkNests.map(util.constructBookMarkNestResponse);
+  //   res.status(200).json(response);
+  // },
   [
-    userValidator.isAuthorExists,
-    bookmarknestValidator.isValidBookMarkNestViewer,
+    userValidator.isUserLoggedIn,
+    // userValidator.isAuthorExists,
+    // bookmarknestValidator.isValidBookMarkNestViewer,
 
   ],
   async (req: Request, res: Response) => {
-    const authorBookMarkNests = await BookMarkNestCollection.findAllByUsername(req.query.author as string);
+    // const authorBookMarkNests = await BookMarkNestCollection.findAllByUsername(req.query.author as string);
+    // const response = authorBookMarkNests.map(util.constructBookMarkNestResponse);
+    // res.status(200).json(response);
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const authorBookMarkNests = await BookMarkNestCollection.findAllByUserId(userId);
     const response = authorBookMarkNests.map(util.constructBookMarkNestResponse);
     res.status(200).json(response);
   }

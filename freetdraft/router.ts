@@ -7,27 +7,28 @@ import * as util from './util';
 
 const router = express.Router();
 
-// /**
-//  * Get all the freetdrafts //REMOVE THIS FUNCTIONALITY SINCE OTHER PEOPLE SHOULD NOT BE ABLE TO VIEW 
-//  * // FREEET DRAFTS
-//  *
-//  * @name GET /api/freetdrafts
-//  *
-//  * @return {FreetDraftResponse[]} - A list of all the freetdrafts sorted in descending
-//  *                      order by date modified
-//  */
 /**
- * Get freetdrafts by author.
- * 
- * TODO: CHANGE THIS TO LOOK LIKE POST API, WHERE YOU VALIDATE ONE IS SIGNED IN AND RETURN THE 
- * DRAFTS FOR THE SPECIFIC AUTHOR SIGNED IN 
+ * Get all the freetdrafts //REMOVE THIS FUNCTIONALITY SINCE OTHER PEOPLE SHOULD NOT BE ABLE TO VIEW 
+ * // FREEET DRAFTS
  *
- * @name GET /api/freetdrafts //?authorId=id = NOT NEEDED SINCE A USER CAN ONLY SEE THEIR OWN
+ * @name GET /api/freetdrafts
  *
- * @return {FreetDraftResponse[]} - An array of freetdrafts created by user with id, authorId
-//  * @throws {400} - If authorId is not given
- * @throws {403} - If user is not logged in
+ * @return {FreetDraftResponse[]} - A list of all the freetdrafts sorted in descending
+ *                      order by date modified
  *
+ *  * @throws {403} - If user is not logged in
+ *
+// /**
+//  * Get freetdrafts by author.
+//  * 
+//  * TODO: CHANGE THIS TO LOOK LIKE POST API, WHERE YOU VALIDATE ONE IS SIGNED IN AND RETURN THE 
+//  * DRAFTS FOR THE SPECIFIC AUTHOR SIGNED IN 
+//  *
+//  * @name GET /api/freetdrafts //?authorId=id = NOT NEEDED SINCE A USER CAN ONLY SEE THEIR OWN
+//  *
+//  * @return {FreetDraftResponse[]} - An array of freetdrafts created by user with id, authorId
+// //  * @throws {400} - If authorId is not given
+
  */
 router.get(
   '/',

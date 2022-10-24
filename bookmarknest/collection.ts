@@ -53,6 +53,16 @@ class BookMarkNestCollection {
 
   }
 
+/**
+   * Get all the bookmarknests in by given author 
+   *
+   * @param {string} userId - The id of author of the bookmarks
+   * @return {Promise<HydratedDocument<BookMark>[]>} - An array of all of the bookmarks
+   */
+ static async findAllByUserId(userId: Types.ObjectId |string): Promise<Array<HydratedDocument<BookMarkNest>>> {
+  const author = await UserCollection.findOneByUserId(userId);
+  return BookMarkNestModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
+}
 
   /**
    * Get all the bookmarknests in the database (i.e. by all users)

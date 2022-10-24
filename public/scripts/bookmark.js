@@ -12,11 +12,11 @@
   }
   
     
-  function viewBookMarksByAuthor(fields) {
-    fetch(`/api/bookmarks?author=${fields.author}`)
-      .then(showResponse)
-      .catch(showResponse);
-  }
+  // function viewBookMarksByAuthor(fields) {
+  //   fetch(`/api/bookmarks?author=${fields.author}`)
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
   
   function createBookMark(fields) {
     // console.log("got to bookmark.js", fields.id)

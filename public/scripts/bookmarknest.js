@@ -12,11 +12,11 @@
   }
   
     
-  function viewBookMarkNestsByAuthor(fields) {
-    fetch(`/api/bookmarknests?author=${fields.author}`)
-      .then(showResponse)
-      .catch(showResponse);
-  }
+  // function viewBookMarkNestsByAuthor(fields) {
+  //   fetch(`/api/bookmarknests?author=${fields.author}`)
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
   
   function createBookMarkNest(fields) {
     fetch(`/api/bookmarknests`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
