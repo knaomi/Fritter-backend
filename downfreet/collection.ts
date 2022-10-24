@@ -78,6 +78,17 @@ class DownFreetCollection {
   }
 
   /**
+     * Get all the downfreets in by given author 
+     *
+     * @param {string} userId - The id of author of the downfreets
+     * @return {Promise<HydratedDocument<DownFreet>[]>} - An array of all of the downfreets
+     */
+  static async findAllByUserId(userId: Types.ObjectId |string): Promise<Array<HydratedDocument<DownFreet>>> {
+    const author = await UserCollection.findOneByUserId(userId);
+    return DownFreetModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
+  }
+  
+  /**
    * Get all the DownFreets on a Freet
    * 
    * @param {string} freetId - The Id of the Freet

@@ -10,12 +10,14 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get all the likes
+ * Get all the likes for user signed in
  *
  * @name GET /api/likes
  *
  * @return {LikeResponse[]} - A list of all the likes sorted in descending
  *                      order by date added
+ * @throws {403} - If the user is not logged in
+
  */
 /**
  * Get likes by author.
@@ -29,25 +31,37 @@ const router = express.Router();
  */
 router.get(
   '/',
+  [
+    userValidator.isUserLoggedIn,
+  ],
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    if (req.query.author !== undefined) { // LATER ADD QUERY FOR FREETID
       next();
       return;
     }
 
-    const allLikes = await LikeCollection.findAll();
-    const response = allLikes.map(util.constructLikeResponse);
+    // const allLikes = await LikeCollection.findAll();
+    // const response = allLikes.map(util.constructLikeResponse);
+    // res.status(200).json(response);
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const authorLikes = await LikeCollection.findAllByUserId(userId);
+    const response = authorLikes.map(util.constructLikeResponse);
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    userValidator.isAuthorExists,
   ],
   async (req: Request, res: Response) => {
+    // LATER ADD CHECK FOR QUERY CHECK FOR FREET ID NOT DEFINED AND AUTHOR DEFINED
     const authorLikes = await LikeCollection.findAllByUsername(req.query.author as string);
     const response = authorLikes.map(util.constructLikeResponse);
     res.status(200).json(response);
   }
+  // CHECKS FOR GETTING NUMBER OF LIKES
+  // IS FREET ID VALID
+
+
 );
 
 /**

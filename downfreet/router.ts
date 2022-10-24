@@ -11,12 +11,13 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get all the downfreets
+ * Get all the downfreets for user signed in
  *
  * @name GET /api/downfreets
  *
  * @return {DownFreetResponse[]} - A list of all the downfreets sorted in descending
  *                      order by date added
+ * @throws {403} - If the user is not logged in
  */
 /**
  * Get downfreets by author.
@@ -30,6 +31,9 @@ const router = express.Router();
  */
 router.get(
   '/',
+  [
+    userValidator.isUserLoggedIn,
+  ],
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
     if (req.query.author !== undefined) {
@@ -37,8 +41,12 @@ router.get(
       return;
     }
 
-    const allDownFreets = await DownFreetCollection.findAll();
-    const response = allDownFreets.map(util.constructDownFreetResponse);
+    // const allDownFreets = await DownFreetCollection.findAll();
+    // const response = allDownFreets.map(util.constructDownFreetResponse);
+    // res.status(200).json(response);
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const authorDownFreets = await DownFreetCollection.findAllByUserId(userId);
+    const response = authorDownFreets.map(util.constructDownFreetResponse);
     res.status(200).json(response);
   },
   [

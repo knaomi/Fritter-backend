@@ -8,8 +8,7 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get all the freetdrafts //REMOVE THIS FUNCTIONALITY SINCE OTHER PEOPLE SHOULD NOT BE ABLE TO VIEW 
- * // FREEET DRAFTS
+ * Get all the freetdrafts for author signed in
  *
  * @name GET /api/freetdrafts
  *
@@ -17,21 +16,21 @@ const router = express.Router();
  *                      order by date modified
  *
  *  * @throws {403} - If user is not logged in
- *
+ */
+
 // /**
 //  * Get freetdrafts by author.
-//  * 
-//  * TODO: CHANGE THIS TO LOOK LIKE POST API, WHERE YOU VALIDATE ONE IS SIGNED IN AND RETURN THE 
-//  * DRAFTS FOR THE SPECIFIC AUTHOR SIGNED IN 
+//  *
 //  *
 //  * @name GET /api/freetdrafts //?authorId=id = NOT NEEDED SINCE A USER CAN ONLY SEE THEIR OWN
 //  *
 //  * @return {FreetDraftResponse[]} - An array of freetdrafts created by user with id, authorId
-// //  * @throws {400} - If authorId is not given
+//  * @throws {400} - If authorId is not given
+//  */
 
- */
 router.get(
   '/',
+  // OBSOLETE
   // NOT APPLICABLE SINCE YOU CANNOT VIEW ANY OTHER PERSON'S FREET DRAFTS
   // async (req: Request, res: Response, next: NextFunction) => {
   //   // Check if authorId query parameter was supplied

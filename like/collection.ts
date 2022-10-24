@@ -80,6 +80,17 @@ class LikeCollection {
   }
 
   /**
+   * Get all the likes in by given author 
+   *
+   * @param {string} userId - The id of author of the likes
+   * @return {Promise<HydratedDocument<Like>[]>} - An array of all of the likes
+   */
+ static async findAllByUserId(userId: Types.ObjectId |string): Promise<Array<HydratedDocument<Like>>> {
+  const author = await UserCollection.findOneByUserId(userId);
+  return LikeModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
+}
+
+  /**
    * Get all the Likes on a Freet
    * 
    * @param {string} freetId - The Id of the Freet
