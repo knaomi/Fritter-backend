@@ -16,6 +16,7 @@ export type BookMark = {
   nestId: Types.ObjectId; // each bookmark must belong to a specific nest
   originalFreet: Types.ObjectId;
   dateCreated: Date;
+  expiringDate: Date;
 
 };
 
@@ -25,6 +26,7 @@ export type PopulatedBookMark = {
   nestId: BookMarkNest;
   originalFreet: Freet;
   dateCreated: Date;
+  expiringDate: Date;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -57,6 +59,10 @@ const BookMarkSchema = new Schema<BookMark>({
   dateCreated:{
     type:Date,
     required: true
+  },
+  expiringDate:{
+    type:Date,
+    required: false
   }
 
 });

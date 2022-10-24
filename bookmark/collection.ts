@@ -26,7 +26,8 @@ class BookMarkCollection {
       authorId,
       nestId,
       originalFreet,
-      dateCreated: date
+      dateCreated: date,
+      expiringDate: (await FreetCollection.findOne(originalFreet))?.expiringDate,
     });
     await bookmark.save(); // Saves bookmark to MongoDB
     return bookmark.populate('authorId');
@@ -39,7 +40,7 @@ class BookMarkCollection {
    * @return {Promise<HydratedDocument<BookMark>> | Promise<null> } - The bookmark with the given bookmarkId, if any
    */
   static async findOne(bookmarkId: Types.ObjectId | string): Promise<HydratedDocument<BookMark>> {
-    return BookMarkModel.findOne({_id: bookmarkId, originalFreet: {expiringDate: {$gt: new Date()}} }).populate('authorId');
+    return BookMarkModel.findOne({_id: bookmarkId, expiringDate: {$gt: new Date()}} ).populate('authorId');
   }
 
   /**
@@ -49,7 +50,7 @@ class BookMarkCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<BookMark>>> {
     // Retrieves bookmarks and sorts them from most to least recent
-    return BookMarkModel.find({originalFreet: {expiringDate: {$gt: new Date()}}}).sort({dateCreated: -1}).populate('authorId');
+    return BookMarkModel.find({expiringDate: {$gt: new Date()}}).sort({dateCreated: -1}).populate('authorId');
   }
 
   /**
@@ -60,7 +61,7 @@ class BookMarkCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<BookMark>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return BookMarkModel.find({authorId: author._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('authorId');
+    return BookMarkModel.find({authorId: author._id, expiringDate: {$gt: new Date()}}).populate('authorId');
   }
 
   /**
@@ -71,7 +72,7 @@ class BookMarkCollection {
    */
    static async findAllByNestId(nestId:Types.ObjectId | string): Promise<Array<HydratedDocument<BookMark>>> {
     const nest = await BookMarkNestCollection.findOne(nestId);
-    return BookMarkModel.find({nestId: nest._id, originalFreet: {expiringDate: {$gt: new Date()}}}).populate('nestId');
+    return BookMarkModel.find({nestId: nest._id, expiringDate: {$gt: new Date()}}).populate('nestId');
   }
 
   /**

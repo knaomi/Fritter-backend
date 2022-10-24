@@ -42,8 +42,10 @@ router.get(
     res.status(200).json(response);
   },
   [
+    // USER IS LOGGED IN
     userValidator.isAuthorExists,
     bookmarkValidator.isValidBookMarkViewer,
+    //CHANGE CODE BELOW TO USE REQ.SESSION.ID
   ],
   async (req: Request, res: Response) => {
     const authorBookMarks = await BookMarkCollection.findAllByUsername(req.query.author as string);
@@ -74,9 +76,9 @@ router.post(
     bookmarkValidator.isValidBookMarkNestId,
   ],
   async (req: Request, res: Response) => {
-    console.log("got to posting in router", req.body.id, req)
+    console.log("got to posting in router", req.body.bookmarknestid, req)
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const bookmark = await BookMarkCollection.addOne(userId, req.body.id, req.body.freetid);
+    const bookmark = await BookMarkCollection.addOne(userId, req.body.bookmarknestid, req.body.freetid);
 
     res.status(201).json({
       message: 'Your bookmark was created successfully.',
@@ -86,7 +88,7 @@ router.post(
 );
 
 
-// /**
+// /** IMPLEMENTED IN BOOKMARKNEST
 //  * Create a new bookmark in a new nest
 //  *
 //  * @name POST /api/bookmarknests/{:nestname}/bookmarks
