@@ -327,6 +327,16 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
 
+#### `GET /api/downfreets?freet=freetid` - Get downfreets on freet
+
+**Returns**
+
+- An array of downfreets on freet with `freetid`
+
+**Throws**
+
+- `400` if `freet` is not given
+- `404` if `freet` is not a recognized freet
 #### `POST /api/downfreets` - Create a new downfreet
 
 **Body**
@@ -367,6 +377,17 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
+
+#### `GET /api/likes?freet=freetId` - Get likes on freet
+
+**Returns**
+
+- An array of likes created on freet with freetId `freetId`
+
+**Throws**
+
+- `400` if `freet` is not given
+- `404` if `freet` is not a recognized freet
 
 #### `POST /api/likes` - Create a new like
 
@@ -412,6 +433,17 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
+
+#### `GET /api/refreets?freet=freetId` - Get refreets on freet
+
+**Returns**
+
+- An array of refreets created on freet with freetId `freet`
+
+**Throws**
+
+- `400` if `freet` is not given
+- `404` if `freet` is not a recognized freet
 
 #### `POST /api/refreets/:freetid` - Create a new refreet
 
@@ -508,7 +540,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 
 <!-- Translate -->
-#### `POST /api/freets/translations/:freetid` - Create an new user account
+<!-- #### `POST /api/freets/translations/:freetid` - Create an new user account
 
 **Body**
 
@@ -521,7 +553,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 - `403` if the user is not logged in
-- `404` if the freetId is invalid
+- `404` if the freetId is invalid -->
 
 <!-- Bookmark nests -->
 
@@ -536,7 +568,9 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
 
-#### `POST /api/bookmarks/:freetId` - Create a new bookmark on freetId
+
+
+#### `POST /api/bookmarknests/:nestname/bookmarks/:freetId` - Create a new bookmark on freetId in new nest identified by nestname 
 
 **Returns**
 
@@ -547,7 +581,23 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 - `404` if the freetId is invalid
+- `400` - If the user had already added a bookMark on the Freet
+- `404` - If the freetid does not exist.
+- `400` - If the user had already a nest with the same nestname.
 
+
+#### `POST /api/bookmarknests/:nestid/bookmarks/:freetId` - Create a new bookmark on freetId in existing nest
+
+**Returns**
+
+- A success message
+- A object with the created bookmark
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `400` - If the user had already a nest with the same nestname.
 
 #### `POST /api/bookmarks/nests` - Create a new bookmark nest
 
