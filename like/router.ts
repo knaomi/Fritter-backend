@@ -29,14 +29,26 @@ const router = express.Router();
  * @throws {404} - If no user has given authorId
  *
  */
+
+/**
+ * Get (number of) likes on freet.
+ *
+ * @name GET /api/likes?freetId=id
+ *
+ * @return {Array<HydratedDocument<DownFreet>>} - (Number of likes) created on freet with id, freetId
+ * @throws {400} - If freetId is not given
+ * @throws {404} - If no freet has given freetId
+ *
+ */
+
 router.get(
   '/',
   [
     userValidator.isUserLoggedIn,
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) { // LATER ADD QUERY FOR FREETID
+    // Check if authorId  and freetId query parameters was supplied
+    if (req.query.author !== undefined  || req.query.freet !== undefined) { 
       next();
       return;
     }
@@ -50,19 +62,29 @@ router.get(
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists,
+    likeValidator.isAuthorExists,
   ],
-  async (req: Request, res: Response) => {
-    // LATER ADD CHECK FOR QUERY CHECK FOR FREET ID NOT DEFINED AND AUTHOR DEFINED
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (req.query.freet !== undefined){
+      next();
+      return;
+    }
     const authorLikes = await LikeCollection.findAllByUsername(req.query.author as string);
     const response = authorLikes.map(util.constructLikeResponse);
     res.status(200).json(response);
+  },
+  [
+    freetValidator.isFreetQueryExists,
+  ],
+  async (req: Request, res: Response) => {
+   
+    const freetLikes = await LikeCollection.findAllbyFreetId(req.query.freet as string);
+    res.status(200).json(freetLikes);
   }
-  // CHECKS FOR GETTING NUMBER OF LIKES
-  // IS FREET ID VALID
-
-
 );
+
+
+// );
 
 /**
  * Create a new like.

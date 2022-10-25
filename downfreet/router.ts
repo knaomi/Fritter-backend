@@ -29,6 +29,17 @@ const router = express.Router();
  * @throws {404} - If no user has given authorId
  *
  */
+
+/**
+ * Get (number of) downfreets on freet.
+ *
+ * @name GET /api/downfreets?freetId=id
+ *
+ * @return {Array<HydratedDocument<DownFreet>>} - (Number of) downfreets created on freet with id, freetId
+ * @throws {400} - If freetId is not given
+ * @throws {404} - If no freet has given freetId
+ *
+ */
 router.get(
   '/',
   [
@@ -36,12 +47,11 @@ router.get(
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    if (req.query.author !== undefined || req.query.freet !== undefined) {
       next();
       return;
     }
-
-    // const allDownFreets = await DownFreetCollection.findAll();
+    // const allDownFreets = await DownFreetCollection.findAll(); // OLD AND OBSOLETE
     // const response = allDownFreets.map(util.constructDownFreetResponse);
     // res.status(200).json(response);
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
@@ -50,12 +60,23 @@ router.get(
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    downfreetValidator.isAuthorExists
   ],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (req.query.freet !== undefined){
+      next();
+      return;
+    }
     const authorDownFreets = await DownFreetCollection.findAllByUsername(req.query.author as string);
     const response = authorDownFreets.map(util.constructDownFreetResponse);
     res.status(200).json(response);
+  },
+  [
+    freetValidator.isFreetQueryExists,
+  ],
+  async (req: Request, res: Response) => {
+    const freetDownFreets = await DownFreetCollection.findAllbyFreetId(req.query.freet as string);
+    res.status(200).json(freetDownFreets);
   }
 );
 

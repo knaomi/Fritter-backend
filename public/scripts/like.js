@@ -12,10 +12,33 @@
   }
   
     
-  function viewLikesByAuthor(fields) {
-    fetch(`/api/likes?author=${fields.author}`)
+  // function viewLikesByAuthor(fields) {
+  //   fetch(`/api/likes?author=${fields.author}`)
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
+
+  // function viewLikesOnFreet(fields) {
+  //   fetch(`/api/likes/${fields.freet}`)
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
+  // BUGGY CODE - OBSOLETE
+  function viewLikesByQuery(fields) {
+  //   fetch(`/api/likes?author=${fields.author}&freet=${fields.freet}`)
+  //     .then(showResponse)
+  //     .catch(showResponse);
+  // }
+    if (fields.author !== undefined){
+      fetch(`/api/likes?author=${fields.author}`)
       .then(showResponse)
       .catch(showResponse);
+    }
+    else{
+      fetch(`/api/likes?freet=${fields.freet}`)
+      .then(showResponse)
+      .catch(showResponse);
+    }
   }
   
   function createLike(fields) {

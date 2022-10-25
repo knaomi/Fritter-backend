@@ -26,11 +26,21 @@ const router = express.Router();
  * @throws {404} - If no user has given authorId
  *
  */
+// /**
+//  * Get (number of) refreets on freet.
+//  *
+//  * @name GET /api/refreets?freetId=id
+//  *
+//  * @return {Array<HydratedDocument<ReFreet>>} - (Number of) refreets created on freet with id, freetId
+//  * @throws {400} - If freetId is not given
+//  * @throws {404} - If no freet has given freetId
+//  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    // Check if authorId or freetId query parameter was supplied
+    console.log("I am here in router 1");
+    if ((req.query.author !== undefined) || (req.query.freet !== undefined) ) {
       next();
       return;
     }
@@ -40,13 +50,27 @@ router.get(
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    refreetValidator.isAuthorExists
   ],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("I am here in router 2");
+    if (req.query.freet !== undefined){
+      next();
+      return;
+    }
     const authorReFreets = await ReFreetCollection.findAllByUsername(req.query.author as string);
     const response = authorReFreets.map(util.constructReFreetResponse);
     res.status(200).json(response);
-  }
+  }, 
+  [
+    freetValidator.isFreetQueryExists,
+  ],
+  async (req: Request, res: Response) => {
+    console.log("I am here in router 3");
+    const freetReFreets = await ReFreetCollection.findAllbyFreetId(req.query.freet as string);
+    res.status(200).json(freetReFreets);
+  },
+
 );
 
 /**

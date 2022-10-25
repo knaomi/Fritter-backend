@@ -12,10 +12,34 @@ function viewAllDownFreets(fields) {
 }
 
   
-function viewDownFreetsByAuthor(fields) {
-  fetch(`/api/downfreets?author=${fields.author}`)
+// function viewDownFreetsByAuthor(fields) {
+//   fetch(`/api/downfreets?author=${fields.author}`)
+//     .then(showResponse)
+//     .catch(showResponse);
+// }
+
+// function viewDownFreetsOnFreet(fields) {
+//   fetch(`/api/downfreets/${fields.freet}`)
+//     .then(showResponse)
+//     .catch(showResponse);
+// }
+
+// BUGGY CODE - OBSOLETE
+function viewDownFreetsByQuery(fields) {
+//   fetch(`/api/downfreets?author=${fields.author}&freet=${fields.freet}`)
+//     .then(showResponse)
+//     .catch(showResponse);
+// }
+  if (fields.author !== undefined){
+    fetch(`/api/downfreets?author=${fields.author}`)
     .then(showResponse)
     .catch(showResponse);
+  }
+  else{
+    fetch(`/api/downfreets?freet=${fields.freet}`)
+    .then(showResponse)
+    .catch(showResponse);
+  }
 }
 
 function createDownFreet(fields) {
