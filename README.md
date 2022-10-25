@@ -557,16 +557,16 @@ This renders the `index.html` file that will be used to interact with the backen
 
 <!-- Bookmark nests -->
 
-#### `GET /api/bookmarks?author=USERNAME` - Get freets by author
+#### `GET /api/bookmarks
 
 **Returns**
 
-- An array of bookmarks created by user with username `author`
+- An array of bookmarks created by user with username `author` who is logged in
 
 **Throws**
 
-- `400` if `author` is not given
-- `404` if `author` is not a recognized username of any user
+
+- `403` if `author` is not logged in 
 
 
 
